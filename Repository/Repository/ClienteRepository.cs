@@ -34,5 +34,16 @@ namespace Repository.Repository
 
             return false;
         }
+
+
+
+        //public void Incluir(Cliente cliente)
+        //{
+        //      cliente.Update_Date = DateTime.Now;
+        //      cliente.Create_Date = DateTime.Now;
+        //      _context.Cliente.Add(cliente);
+        //       bool teste = _context.SaveChanges() > 0;
+        //}
+
     }
 }
