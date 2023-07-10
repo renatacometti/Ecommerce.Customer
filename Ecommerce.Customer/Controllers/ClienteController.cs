@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -8,7 +9,7 @@ namespace Ecommerce.Customer.Controllers
 {
     //[ApiController]
     [Route("api/[controller]")]
-    public class ClienteController : Controller
+    public class ClienteController : BaseController
     {
         private readonly IClienteService _clienteService;
 
@@ -21,21 +22,95 @@ namespace Ecommerce.Customer.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var response = this._clienteService.GetAll();
-            return Ok(response);
+            try
+            {
+                var response = this._clienteService.GetAll();
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os clientes", ex);
+            }
+            
 
         }
+
+     
+        [HttpGet("GetbyId/{idCliente}")]
+        public IActionResult GetbyId([FromRoute] int idCliente)
+        {
+            try
+            {
+                var response = this._clienteService.GetById(idCliente);
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os clientes", ex);
+            }
+
+
+        }
+
+        [HttpDelete("{idCliente}")]
+        public async Task<IActionResult> Delete([FromRoute] int idCliente)
+        {
+   
+            try
+            {
+                if (!await this._clienteService.Delete(idCliente))
+                    return Conflict(this._clienteService.RetornaErros());
+                else
+                    return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar excluir o Cliente", ex);
+            }
+
+
+        }
+
 
         [HttpPost]
         [Route("Created/{senha}")]
-        public IActionResult Created([FromBody] Cliente cliente, [FromRoute] string senha)
+        public async Task<IActionResult> Created([FromBody] Cliente cliente, [FromRoute] string senha)
         {
-            var response = this._clienteService.Created(cliente, senha);
-            return Ok(response);
+            try
+            {
+                if (!await this._clienteService.Created(cliente, senha))
+                    return Conflict(this._clienteService.RetornaErros());
+                else
+                     return Ok();
+            }
+            catch (Exception ex)
+            {
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar cadastrar um cliente.", ex);
+            }
 
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Cliente cliente)
+        {
+            try
+            {
+                if (!await this._clienteService.Update(cliente))
+                    return Conflict(this._clienteService.RetornaErros());
+                else
+                    return Ok();
+            }
+            catch (Exception ex)
+            {
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar altera um cliente.", ex);
+            }
 
+        }
 
     }
 }
