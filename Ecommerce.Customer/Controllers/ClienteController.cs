@@ -20,11 +20,11 @@ namespace Ecommerce.Customer.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows)
         {
             try
             {
-                var response = this._clienteService.GetAll();
+                var response = this._clienteService.GetAll(page, rows);
                 return Ok(response);
 
             }

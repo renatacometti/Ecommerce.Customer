@@ -56,9 +56,9 @@ namespace Service.Services
 
         }
 
-        public IEnumerable<ClienteVM> GetAll()
+        public IEnumerable<ClienteVM> GetAll(int page, int rows)
         {
-            var cliente = _clienteRepository.GetAll();
+            var cliente = _clienteRepository.GetAll().Skip((page-1)*rows).Take(rows).ToList();
 
             var clienteVM = _mapper.Map<IEnumerable<ClienteVM>>(cliente);
             return clienteVM;
