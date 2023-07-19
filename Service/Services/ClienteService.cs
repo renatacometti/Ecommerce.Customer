@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using Domain.DTO;
 using Domain.Entities;
 using Domain.Repository;
 using Service.Interfaces;
 using Service.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace Service.Services
 {
@@ -56,9 +51,24 @@ namespace Service.Services
 
         }
 
-        public IEnumerable<ClienteVM> GetAll(int page, int rows)
+        public IEnumerable<ClienteVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
         {
-            var cliente = _clienteRepository.GetAll().Skip((page-1)*rows).Take(rows).ToList();
+
+         
+            var cliente = _clienteRepository.GetAll().Skip((page  - 1) * rows).Take(rows).ToList();
+
+
+            if (!string.IsNullOrEmpty(colunaOrdenacao) && !string.IsNullOrEmpty(direcaoOrdenacao))
+            {
+                //direcaoOrdenacao = "asc/desc" ou bool sortAscending = true;
+                //string sortExpression = colunaOrdenacao + (sortAscending ? " ascending" : " descending");
+
+                // Construindo a expressão de ordenação dinâmica
+                cliente = cliente.AsQueryable()
+                    .OrderBy($"{colunaOrdenacao} {direcaoOrdenacao}")
+                    .ToList();
+        
+            }
 
             var clienteVM = _mapper.Map<IEnumerable<ClienteVM>>(cliente);
             return clienteVM;

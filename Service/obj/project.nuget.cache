@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "iWU/4bRUc4FlIFjGhxabrAQXTts0F4EtEWNBMDJQ12zZIwzrs3qHJfiaD8x2ma4zUt5tLoYHzcmCCuRNm4mldQ==",
+  "dgSpecHash": "+hJBaFCCYGOUFbXyD1r8t5h2BFNboJsb26I34asZKv3I8V5IZmgKLdgFSQ3hE9NYlWtaSC9LxYi1wd6PgGIfDQ==",
   "success": true,
   "projectFilePath": "C:\\Projetos\\luanaanalist\\customer-api\\Ecommerce.Customer\\Service\\Service.csproj",
   "expectedPackageFiles": [
@@ -61,6 +61,7 @@
     "C:\\Users\\rafae\\.nuget\\packages\\system.globalization\\4.3.0\\system.globalization.4.3.0.nupkg.sha512",
     "C:\\Users\\rafae\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.30.0\\system.identitymodel.tokens.jwt.6.30.0.nupkg.sha512",
     "C:\\Users\\rafae\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
+    "C:\\Users\\rafae\\.nuget\\packages\\system.linq.dynamic.core\\1.3.3\\system.linq.dynamic.core.1.3.3.nupkg.sha512",
     "C:\\Users\\rafae\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\rafae\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\rafae\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",

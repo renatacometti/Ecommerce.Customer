@@ -67,6 +67,10 @@
               "target": "Package",
               "version": "[6.30.0, )"
             },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.3.3, )"
+            },
             "System.Reflection": {
               "target": "Package",
               "version": "[4.3.0, )"
@@ -151,6 +155,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.30.0, )"
+            },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.3.3, )"
             },
             "System.Reflection": {
               "target": "Package",
@@ -238,6 +246,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.30.0, )"
+            },
+            "System.Linq.Dynamic.Core": {
+              "target": "Package",
+              "version": "[1.3.3, )"
             },
             "System.Reflection": {
               "target": "Package",

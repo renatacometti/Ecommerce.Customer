@@ -11,7 +11,7 @@ namespace Service.Interfaces
 {
     public interface IClienteService
     {
-        IEnumerable<ClienteVM> GetAll(int page, int rows);
+        IEnumerable<ClienteVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao);
         bool ValidacaodeSenha(string senhaCliente, string senhaValidacao);
         bool validaEmail(string email);
         Task<bool> Created(Cliente cliente, string senha);
