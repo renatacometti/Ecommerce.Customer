@@ -18,7 +18,7 @@ namespace Ecommerce.Customer.Controllers
             _clienteService = clienteService;
         }
 
-
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows, [FromQuery] string colunaOrdenacao, [FromQuery] string direcaoOrdenacao)
         {
