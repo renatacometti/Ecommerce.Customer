@@ -20,7 +20,8 @@ namespace Service.Mapping
             CreateMap<ClienteDTO, ClienteVM>().ReverseMap();
             CreateMap<ClienteDTO, Cliente>().ReverseMap();
             CreateMap<ClienteVM, Cliente>().ReverseMap();
-            //CreateMap<ClienteVM, ClienteDTO>().ReverseMap();
+            CreateMap<EnderecoVM, Endereco>().ReverseMap();
+          
 
         }
     }

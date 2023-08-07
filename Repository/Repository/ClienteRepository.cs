@@ -44,6 +44,16 @@ namespace Repository.Repository
            
         }
 
+        public Endereco BuscarEnderecoPorCliente(string cep,string cpf)
+        {
+            var enderecoRetornado = (from c in _context.Cliente
+                                     join e in _context.Endereco on c.Id equals e.Id_Cliente
+                                     where c.Cpf == cpf && e.Cep == cep
+                                     select e).FirstOrDefault();
+            return enderecoRetornado;
+
+        }
+
         public void EnviarEmail(Cliente cliente)
         {
 

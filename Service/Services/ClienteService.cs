@@ -40,6 +40,8 @@ namespace Service.Services
             return clienteVM;
         }
 
+    
+
         public async Task<bool> Delete(int id)
         {
             var cliente = _clienteRepository.BuscarClienteESeusRelacionamentos(id);
@@ -216,5 +218,14 @@ namespace Service.Services
       
         }
 
+        public EnderecoVM BuscarEnderecoCLiente(string cep, string cpf)
+        {
+            var enderecoRetornado = _clienteRepository.BuscarEnderecoPorCliente(cep, cpf);
+            if(enderecoRetornado == null)
+                return new EnderecoVM();
+
+            var endVM = _mapper.Map<EnderecoVM>(enderecoRetornado);
+            return endVM;
+        }
     }
 }

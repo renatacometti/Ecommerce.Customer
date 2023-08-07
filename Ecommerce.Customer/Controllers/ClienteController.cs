@@ -57,23 +57,7 @@ namespace Ecommerce.Customer.Controllers
         }
 
 
-        [HttpGet("BuscarClienteporCpf/{cpfCliente}")]
-        public IActionResult BuscarClienteporCpf([FromRoute] string cpfCliente)
-        {
-            try
-            {
-                var response = this._clienteService.BuscarClienteporCpf(cpfCliente);
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-
-                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os cliente", ex);
-            }
-
-
-        }
+ 
 
         [HttpDelete("{idCliente}")]
         public async Task<IActionResult> Delete([FromRoute] int idCliente)
@@ -129,6 +113,40 @@ namespace Ecommerce.Customer.Controllers
                 return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar altera um cliente.", ex);
             }
 
+        }
+
+        [HttpGet("BuscarClienteporCpf/{cpfCliente}")]
+        public IActionResult BuscarClienteporCpf([FromRoute] string cpfCliente)
+        {
+            try
+            {
+                var response = this._clienteService.BuscarClienteporCpf(cpfCliente);
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os cliente", ex);
+            }
+
+
+        }
+
+        [HttpGet("RetornaEndereco/{cep}/{cpf}")]
+        public IActionResult RetornaEndereco([FromRoute]string cep, [FromRoute] string cpf) 
+        {
+            try
+            {
+                var response = this._clienteService.BuscarEnderecoCLiente(cep, cpf);
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar o endereco", ex);
+            }
         }
 
     }

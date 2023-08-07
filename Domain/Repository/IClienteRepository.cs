@@ -21,5 +21,7 @@ namespace Domain.Repository
         void Alterar(Cliente cliente);
         Task<bool> SaveAllAsync();
         Cliente BuscarClienteporCpf(string cpf);
+
+        Endereco BuscarEnderecoPorCliente(string cep, string cpf);
     }
 }
