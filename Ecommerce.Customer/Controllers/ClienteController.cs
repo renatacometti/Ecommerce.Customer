@@ -50,7 +50,26 @@ namespace Ecommerce.Customer.Controllers
             catch (Exception ex)
             {
 
-                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os clientes", ex);
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os cliente", ex);
+            }
+
+
+        }
+
+
+        [HttpGet("BuscarClienteporCpf/{cpfCliente}")]
+        public IActionResult BuscarClienteporCpf([FromRoute] string cpfCliente)
+        {
+            try
+            {
+                var response = this._clienteService.BuscarClienteporCpf(cpfCliente);
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+
+                return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os cliente", ex);
             }
 
 

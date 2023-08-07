@@ -33,6 +33,13 @@ namespace Service.Services
             return clienteVM;
         }
 
+        public ClienteVM BuscarClienteporCpf(string cpf)
+        {
+            var cliente = _clienteRepository.BuscarClienteporCpf(cpf);
+            var clienteVM = _mapper.Map<ClienteVM>(cliente);
+            return clienteVM;
+        }
+
         public async Task<bool> Delete(int id)
         {
             var cliente = _clienteRepository.BuscarClienteESeusRelacionamentos(id);

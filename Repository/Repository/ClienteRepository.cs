@@ -37,6 +37,13 @@ namespace Repository.Repository
             return false;
         }
 
+        public Cliente BuscarClienteporCpf(string cpf)
+        {
+            var cliente = _context.Cliente.Where(c => c.Cpf == cpf).FirstOrDefault();
+            return cliente;
+           
+        }
+
         public void EnviarEmail(Cliente cliente)
         {
 

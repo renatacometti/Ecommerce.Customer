@@ -18,6 +18,7 @@ namespace Service.Interfaces
         Task<bool> Update(Cliente cliente);
         string RetornaErros();
         ClienteVM GetById(int id);
+        ClienteVM BuscarClienteporCpf(string cpf);
         Task<bool> Delete(int id);
 
     }
