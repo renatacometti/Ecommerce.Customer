@@ -26,11 +26,13 @@ namespace Infraestrutura
 
             services.AddScoped<ICommonRepository<Cliente>, ClienteRepository>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
         }
         private static void ConfigureService(IServiceCollection services)
         {
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IEnderecoService, EnderecoService>();
             services.AddScoped<ITokenService, TokenService>();
         }
     }

@@ -227,5 +227,7 @@ namespace Service.Services
             var endVM = _mapper.Map<EnderecoVM>(enderecoRetornado);
             return endVM;
         }
+
+     
     }
 }

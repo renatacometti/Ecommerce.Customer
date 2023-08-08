@@ -8,7 +8,7 @@ namespace Service.ViewModel
 {
     public class EnderecoVM
     {
-
+        public int Id { get; set; }
         public string Rua { get; set; }
 
   

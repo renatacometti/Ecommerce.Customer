@@ -21,6 +21,7 @@ namespace Service.Interfaces
         ClienteVM BuscarClienteporCpf(string cpf);
         Task<bool> Delete(int id);
         EnderecoVM BuscarEnderecoCLiente(string cep, string cpf);
+        
 
     }
         
