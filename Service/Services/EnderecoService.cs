@@ -27,11 +27,11 @@ namespace Service.Services
             _mapper = mapper;
 
         }
-        public async Task<bool> CadastrarNovoEnderecoParaUsuario(Endereco endereco, int idUsuario)
+        public async Task<bool> CadastrarNovoEnderecoParaUsuario(Endereco endereco)
         {
             try
             {
-                endereco.Id_Cliente = idUsuario;
+                
                 //var clienteRetornado = _enderecoRepository.Create(endereco);
                 _enderecoRepository.Add(endereco);
                 if (!await _enderecoRepository.SaveAllAsync())

@@ -10,6 +10,6 @@ namespace Service.Interfaces
     public interface IEnderecoService
     {
         string RetornaErros();
-        Task<bool> CadastrarNovoEnderecoParaUsuario(Endereco endereco, int idUsuario);
+        Task<bool> CadastrarNovoEnderecoParaUsuario(Endereco endereco);
     }
 }

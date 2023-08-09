@@ -14,12 +14,12 @@ namespace Ecommerce.Customer.Controllers
             _enderecoService = enderecoService;
         }
         [HttpPost]
-        [Route("CadastrarNovoEnderecoParaUsuario/{idUsuario}")]
-        public async Task<IActionResult> CadastrarNovoEnderecoParaUsuario([FromBody] Endereco endereco, [FromRoute] int idUsuario)
+        
+        public async Task<IActionResult> CadastrarNovoEnderecoParaUsuario([FromBody] Endereco endereco)
         {
             try
             {
-                if (!await this._enderecoService.CadastrarNovoEnderecoParaUsuario(endereco, idUsuario))
+                if (!await this._enderecoService.CadastrarNovoEnderecoParaUsuario(endereco))
                     return Conflict(this._enderecoService.RetornaErros());
                 else
                     return Ok();
