@@ -192,11 +192,7 @@ namespace Repository.Repository
                     buscaClienteERelacionamento.Enderecos.Add(novoEndereco);
                 }
 
-                //_context.SaveChanges();
             }
-
-
-           // _context.SaveChanges();
 
         }
 

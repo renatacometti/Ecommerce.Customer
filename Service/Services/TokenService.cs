@@ -29,10 +29,7 @@ namespace Service.Services
 
         }
 
-        public string CreateToken(User user)
-        {
-            throw new NotImplementedException();
-        }
+  
 
         //public string CreateToken(User user)
         //{
@@ -64,7 +61,7 @@ namespace Service.Services
 
                 }),
 
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = credenciais
             };
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -88,5 +85,36 @@ namespace Service.Services
             return token;
         }
 
+        public bool ValidateToken(string token)
+        {
+
+            //string secretKey = "sua-chave-secreta";
+            var tokenHandler = new JwtSecurityTokenHandler();
+            //var key = Convert.FromBase64String(secretKey); // Converta sua chave para bytes
+
+            try
+            {
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = _key, //new SymmetricSecurityKey(key),
+                    ValidateIssuer = false, // Você pode validar o emissor se necessário
+                    ValidateAudience = false, // Você pode validar a audiência se necessário
+                    ClockSkew = TimeSpan.Zero // Não permitir diferença de tempo
+                };
+
+                SecurityToken validatedToken;
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+
+                return true; // Token válido
+            }
+            catch (Exception)
+            {
+                return false; // Token inválido
+            }
+        }
     }
+   
+
 }
+

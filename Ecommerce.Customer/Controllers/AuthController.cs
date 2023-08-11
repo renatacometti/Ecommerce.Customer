@@ -17,7 +17,7 @@ namespace Ecommerce.Customer.Controllers
         }
 
 
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Sign([FromBody] User user)
         {
@@ -27,6 +27,17 @@ namespace Ecommerce.Customer.Controllers
 
 
         }
-       
+        //[AllowAnonymous]
+        [Authorize]
+        [HttpGet("ValidaToken/{token}")]
+        public ActionResult ValidaToken([FromRoute] string token)
+        {
+
+            var response = _tokenService.ValidateToken(token);
+            return Ok(response);
+
+
+        }
+
     }
 }

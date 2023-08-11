@@ -5,6 +5,7 @@ using Service.Interfaces;
 namespace Ecommerce.Customer.Controllers
 {
     [Route("api/[controller]")]
+    //[ServiceFilter(typeof(JwtAuthenticationFilter))]
     public class EnderecoController : BaseController
     {
         private readonly IEnderecoService _enderecoService;

@@ -9,6 +9,7 @@ namespace Ecommerce.Customer.Controllers
 {
     //[ApiController]
     [Route("api/[controller]")]
+    
     public class ClienteController : BaseController
     {
         private readonly IClienteService _clienteService;
