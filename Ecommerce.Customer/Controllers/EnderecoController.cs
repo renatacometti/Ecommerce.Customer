@@ -14,8 +14,8 @@ namespace Ecommerce.Customer.Controllers
         {
             _enderecoService = enderecoService;
         }
+
         [HttpPost]
-        
         public async Task<IActionResult> CadastrarNovoEnderecoParaUsuario([FromBody] Endereco endereco)
         {
             try
