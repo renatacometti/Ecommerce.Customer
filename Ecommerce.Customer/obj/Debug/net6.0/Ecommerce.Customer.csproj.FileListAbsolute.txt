@@ -209,3 +209,8 @@ C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.RazorAssemblyInfo.cs
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.MvcApplicationPartsAssemblyInfo.cs
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\staticwebassets\msbuild.Ecommerce.Customer.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\staticwebassets\msbuild.build.Ecommerce.Customer.props
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.Ecommerce.Customer.props
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.Ecommerce.Customer.props
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\staticwebassets.pack.json

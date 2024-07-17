@@ -19,7 +19,7 @@ namespace Ecommerce.Customer.Controllers
             _clienteService = clienteService;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows, [FromQuery] string colunaOrdenacao, [FromQuery] string direcaoOrdenacao)
         {
@@ -116,6 +116,7 @@ namespace Ecommerce.Customer.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("BuscarClienteporCpf/{cpfCliente}")]
         public IActionResult BuscarClienteporCpf([FromRoute] string cpfCliente)
         {
