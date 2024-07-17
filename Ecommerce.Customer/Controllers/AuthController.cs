@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -19,11 +20,26 @@ namespace Ecommerce.Customer.Controllers
 
         [AllowAnonymous]
         [HttpPost("Sign")]
-        public ActionResult Sign([FromBody] User user)
+        public ActionResult<APIResponse<string>> Sign([FromBody] User user)
         {
 
-            var response = _tokenService.Sign(user.Email, user.Senha);
-            return Ok(response);
+            var token = _tokenService.Sign(user.Email, user.Senha);
+           // return Ok(token);
+           if (token == null) 
+           {
+                return Unauthorized(new APIResponse<string>
+                {
+                    Success = false,
+                    Message = "Invalid credentials",
+                    Item = null
+                });
+            }
+            return Ok(new APIResponse<string>
+            {
+                Success = true,
+                Message = "Token generated successfully",
+                Item = token
+            });
 
 
         }
