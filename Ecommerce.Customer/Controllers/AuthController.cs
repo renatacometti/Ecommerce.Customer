@@ -18,8 +18,9 @@ namespace Ecommerce.Customer.Controllers
         }
 
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpPost("Sign")]
+       // [Authorize]
         public ActionResult<APIResponse<string>> Sign([FromBody] User user)
         {
 

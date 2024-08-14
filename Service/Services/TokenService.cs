@@ -61,7 +61,7 @@ namespace Service.Services
 
                 }),
 
-                Expires = DateTime.UtcNow.AddMinutes(10),
+                Expires = DateTime.UtcNow.AddHours(4),
                 SigningCredentials = credenciais
             };
             var tokenHandler = new JwtSecurityTokenHandler();
