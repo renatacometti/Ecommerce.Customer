@@ -18,18 +18,18 @@ namespace Service.Services
     {
         //private readonly SymmetricSecurityKey _chave; // usa para o metodo CreateToken
         private readonly SymmetricSecurityKey _key;
-        private readonly IClienteRepository _clienteRepository;
+        private readonly IUsuarioRepository _clienteRepository;
 
-        public TokenService(IConfiguration config, IClienteRepository clienteRepository)
+        public TokenService(IConfiguration config, IUsuarioRepository clienteRepository)
         {
             //_chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["chaveSecreta"])); // // usa para o metodo CreateToken
             _key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config["Jwt:Key"]));
-            
-            _clienteRepository = clienteRepository; 
+
+            _clienteRepository = clienteRepository;
 
         }
 
-  
+
 
         //public string CreateToken(User user)
         //{
@@ -50,25 +50,102 @@ namespace Service.Services
         //    return tokenHandler.WriteToken(token);
         //}
 
-        public string CreateToken2(User user) 
+        //public string CreateToken2(User user)
+        //{
+        //    var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+        //    var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
+
+
+        //    var permissoesString = string.Join(",", permissoesUsuario.Permissoes);
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        //            new Claim("perfil", permissoesUsuario.Perfil.Descrição),
+        //            new Claim("permissoes", permissoesString),  // A lista de permissões em string
+        //            new Claim("nomeUsuario", permissoesUsuario.Nome),
+        //            new Claim("descricaoPerfil", permissoesUsuario.Perfil.Nome)
+
+        //        }),
+
+        //        Expires = DateTime.UtcNow.AddHours(4),
+        //        SigningCredentials = credenciais
+        //    };
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+
+
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+
+        //}
+
+
+        public string CreateToken2(User user)
         {
             var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+            var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
+
+            // Inicializando a lista de claims
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("nomeUsuario", permissoesUsuario.Nome),
+                new Claim("perfil", permissoesUsuario.Perfil.Nome),
+                //new Claim("permissoes", permissoesUsuario.Permissoes)
+            };
+
+            // Iterando sobre cada permissão e adicionando como claim individual
+            if (permissoesUsuario.Permissoes != null)
+            {
+                foreach (var permissao in permissoesUsuario.Permissoes)
+                {
+                    claims.Add(new Claim("permissao", permissao.Nome)); // Ajuste a propriedade conforme necessário
+                }
+            }
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email)
-
-                }),
-
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(4),
                 SigningCredentials = credenciais
             };
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-  
         }
+
+
+        //public string CreateToken2(User user, string storeId, string userEmail)
+        //{
+        //    var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+
+        //    // Recupera as permissões do usuário
+        //    var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
+
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+        //           // new Claim("perfil", ),  // Claim para perfil de permissões
+        //           // Claims adicionais
+        //           // new Claim("store", storeId),  // Claim personalizada para "store"
+        //           // new Claim("email", userEmail),  // Claim personalizada para "email"
+                    
+        //        }),
+
+        //        Expires = DateTime.UtcNow.AddHours(4),
+        //        SigningCredentials = credenciais
+        //    };
+
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        //    return tokenHandler.WriteToken(token);
+        //}
+
 
 
 
@@ -114,7 +191,7 @@ namespace Service.Services
             }
         }
     }
-   
+
 
 }
 

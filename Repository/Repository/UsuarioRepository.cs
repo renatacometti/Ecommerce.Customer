@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +11,10 @@ using System.Text;
 
 namespace Repository.Repository
 {
-    public class ClienteRepository : BaseRepository<Cliente>, IClienteRepository
+    public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     {
         private IConfiguration _configuration;
-        public ClienteRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
+        public UsuarioRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
         {
             _configuration = configuration;
         }
@@ -21,32 +22,93 @@ namespace Repository.Repository
         public User ValidaCliente(string email, string senha)
         {
 
-            var user = _context.Cliente.Where(c => c.Email == email && c.Senha == senha)
-                .Select(user => new User() { Email = user.Email, Senha = user.Senha }).SingleOrDefault();
+            var user = _context.Usuario.Where(c => c.Email == email && c.Senha == senha)
+                .Select(user => new User() { Email = user.Email, Senha = user.Senha, Id = user.Id }).SingleOrDefault();
 
             return user;
 
         }
 
+
+        public UsuarioDTO BuscarPermissoesUsuario(int idUsuario)
+        {
+
+            //var user = (from u in _context.Usuario
+            //            join p in _context.Perfil on u.Id_Perfil equals p.Id
+            //            join pp in _context.Perfil_Permissao on p.Id equals pp.Id_Perfil
+            //            join per in _context.Permissao on pp.Id_Permissao equals per.Id
+            //            where u.Id == idUsuario)
+            //             .Select(user => new UsuarioDTO() { Cpf = user.cpf, Senha = user.Senha, Id = user.Id }).SingleOrDefault();
+
+
+            //return user;
+
+            var userTwo = (from user in _context.Usuario
+                           join p in _context.Perfil on user.Id_Perfil equals p.Id
+                           join pp1 in _context.Perfil_Permissao on p.Id equals pp1.Id_Perfil
+                           join per in _context.Permissao on pp1.Id_Permissao equals per.Id
+                           where user.Id == idUsuario
+                           select new UsuarioDTO
+                           {
+                               Id = user.Id,
+                               Nome = user.Nome,
+                               Email = user.Email,
+                               Perfil = new Perfil
+                               {
+                                   Id = p.Id,
+                                   Nome = p.Nome
+                               },
+                               Permissoes = (from perm in _context.Permissao
+                                             join pp in _context.Perfil_Permissao on perm.Id equals pp.Id_Permissao
+                                             where pp.Id_Perfil == p.Id
+                                             select new Permissao
+                                             {
+                                                 Id = perm.Id,
+                                                 Nome = perm.Nome
+                                             }).ToList()
+                           }).FirstOrDefault();
+
+           return userTwo;
+
+
+        }
         public bool CustomerExist(string cpf, string email)
         {
-            var customerExist = _context.Cliente.Where(c => c.Email == email || c.Cpf == cpf).FirstOrDefault();
+            var customerExist = _context.Usuario.Where(c => c.Email == email || c.Cpf == cpf).FirstOrDefault();
             if (customerExist != null)
                 return true;
 
             return false;
         }
 
-        public Cliente BuscarClienteporCpf(string cpf)
+        public Usuario BuscarClienteporCpf(string cpf)
         {
-            var cliente = _context.Cliente.Where(c => c.Cpf == cpf).FirstOrDefault();
+            var cliente = _context.Usuario.Where(c => c.Cpf == cpf).FirstOrDefault();
             return cliente;
-           
+
         }
 
-        public Endereco BuscarEnderecoPorCliente(string cep,string cpf)
+        public Usuario GetByIDTest(int id)
         {
-            var enderecoRetornado = (from c in _context.Cliente
+
+            var user = _context.Usuario.Where(c => c.Id == id).FirstOrDefault();
+            return user;
+
+        }
+
+        public Usuario GetByIDTestTwo(int id)
+        {
+
+            var user = (from c in _context.Usuario
+                        where c.Id == id
+                        select c).FirstOrDefault();
+            return user;
+
+        }
+
+        public Endereco BuscarEnderecoPorCliente(string cep, string cpf)
+        {
+            var enderecoRetornado = (from c in _context.Usuario
                                      join e in _context.Endereco on c.Id equals e.Id_Cliente
                                      where c.Cpf == cpf && e.Cep == cep
                                      select e).FirstOrDefault();
@@ -54,7 +116,7 @@ namespace Repository.Repository
 
         }
 
-        public void EnviarEmail(Cliente cliente)
+        public void EnviarEmail(Usuario cliente)
         {
 
             CultureInfo cult = new CultureInfo("pt-BR");
@@ -136,10 +198,10 @@ namespace Repository.Repository
             //}
         }
 
-        public Cliente BuscarClienteESeusRelacionamentos(int idCliente)
+        public Usuario BuscarClienteESeusRelacionamentos(int idCliente)
         {
 
-            var cliente =  _context.Cliente.AsNoTracking()
+            var cliente = _context.Usuario.AsNoTracking()
                    .Include(p => p.Enderecos)
                     .Where(c => c.Id == idCliente)
                                  .SingleOrDefault();
@@ -147,14 +209,14 @@ namespace Repository.Repository
             return cliente;
         }
 
-        public void Alterar(Cliente cliente)
+        public void Alterar(Usuario cliente)
         {
-            var buscaClienteERelacionamento= _context.Cliente
+            var buscaClienteERelacionamento = _context.Usuario
              .Where(p => p.Id == cliente.Id)
              .Include(p => p.Enderecos)
             .SingleOrDefault();
 
-            if (buscaClienteERelacionamento != null) 
+            if (buscaClienteERelacionamento != null)
             {
                 cliente.Update_Date = DateTime.Now;
                 _context.Entry(buscaClienteERelacionamento).CurrentValues.SetValues(cliente);
@@ -201,6 +263,7 @@ namespace Repository.Repository
             return await _context.SaveChangesAsync() > 0;
 
         }
+
 
     }
 }

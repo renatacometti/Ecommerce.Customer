@@ -2,11 +2,7 @@
 using Domain.DTO;
 using Domain.Entities;
 using Service.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Service.Mapping
 {
@@ -17,9 +13,9 @@ namespace Service.Mapping
             AllowNullCollections = true;
             AllowNullDestinationValues = true;
 
-            CreateMap<ClienteDTO, ClienteVM>().ReverseMap();
-            CreateMap<ClienteDTO, Cliente>().ReverseMap();
-            CreateMap<ClienteVM, Cliente>().ReverseMap();
+            CreateMap<UsuarioDTO, UsuarioVM>().ReverseMap();
+            CreateMap<UsuarioDTO, Usuario>().ReverseMap();
+            CreateMap<UsuarioVM, Usuario>().ReverseMap();
             CreateMap<EnderecoVM, Endereco>().ReverseMap();
           
 

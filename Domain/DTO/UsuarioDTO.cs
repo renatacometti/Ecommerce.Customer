@@ -1,15 +1,7 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Domain.DTO
 {
-//teste
-
-    public struct ClienteDTO
+    public struct UsuarioDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -19,6 +11,8 @@ namespace Domain.DTO
         public DateTime Data_Nascimento { get; set; }
         public string Telefone { get; set; }
         public string Ativo { get; set; }
+        public Perfil Perfil { get; set; }
         public ICollection<Endereco> Enderecos { get; set; }
+        public ICollection<Permissao> Permissoes { get; set; }
     }
 }

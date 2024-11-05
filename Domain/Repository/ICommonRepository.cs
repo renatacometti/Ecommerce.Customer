@@ -1,10 +1,4 @@
-﻿using NPOI.SS.Formula.Functions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-
+﻿
 namespace Domain.Repository
 {
     public interface ICommonRepository<T>: ITransactionRepository where T : class

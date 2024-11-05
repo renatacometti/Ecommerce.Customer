@@ -1,31 +1,32 @@
-﻿using Domain.DTO;
+﻿
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
-using Service.ViewModel;
+
 
 namespace Ecommerce.Customer.Controllers
 {
     //[ApiController]
     [Route("api/[controller]")]
     
-    public class ClienteController : BaseController
+    public class UsuarioController : BaseController
     {
-        private readonly IClienteService _clienteService;
+        private readonly IUsuarioService _usuarioService;
 
-        public ClienteController(IClienteService clienteService)
+        public UsuarioController(IUsuarioService usuarioService)
         {
-            _clienteService = clienteService;
+            _usuarioService = usuarioService;
         }
 
-        [Authorize]
+        //[Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows, [FromQuery] string colunaOrdenacao, [FromQuery] string direcaoOrdenacao)
         {
             try
             {
-                var response = this._clienteService.GetAll(page, rows, colunaOrdenacao, direcaoOrdenacao);
+                var response = this._usuarioService.GetAll(page, rows, colunaOrdenacao, direcaoOrdenacao);
                 return Ok(response);
 
             }
@@ -44,7 +45,7 @@ namespace Ecommerce.Customer.Controllers
         {
             try
             {
-                var response = this._clienteService.GetById(idCliente);
+                var response = this._usuarioService.GetById(idCliente);
                 return Ok(response);
 
             }
@@ -57,17 +58,14 @@ namespace Ecommerce.Customer.Controllers
 
         }
 
-
- 
-
         [HttpDelete("{idCliente}")]
         public async Task<IActionResult> Delete([FromRoute] int idCliente)
         {
    
             try
             {
-                if (!await this._clienteService.Delete(idCliente))
-                    return Conflict(this._clienteService.RetornaErros());
+                if (!await this._usuarioService.Delete(idCliente))
+                    return Conflict(this._usuarioService.RetornaErros());
                 else
                     return Ok();
 
@@ -83,12 +81,12 @@ namespace Ecommerce.Customer.Controllers
 
         [HttpPost]
         [Route("Created/{senha}")]
-        public async Task<IActionResult> Created([FromBody] Cliente cliente, [FromRoute] string senha)
+        public async Task<IActionResult> Created([FromBody] Usuario cliente, [FromRoute] string senha)
         {
             try
             {
-                if (!await this._clienteService.Created(cliente, senha))
-                    return Conflict(this._clienteService.RetornaErros());
+                if (!await this._usuarioService.Created(cliente, senha))
+                    return Conflict(this._usuarioService.RetornaErros());
                 else
                      return Ok();
             }
@@ -100,12 +98,12 @@ namespace Ecommerce.Customer.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Cliente cliente)
+        public async Task<IActionResult> Update([FromBody] Usuario cliente)
         {
             try
             {
-                if (!await this._clienteService.Update(cliente))
-                    return Conflict(this._clienteService.RetornaErros());
+                if (!await this._usuarioService.Update(cliente))
+                    return Conflict(this._usuarioService.RetornaErros());
                 else
                     return Ok();
             }
@@ -122,7 +120,7 @@ namespace Ecommerce.Customer.Controllers
         {
             try
             {
-                var response = this._clienteService.BuscarClienteporCpf(cpfCliente);
+                var response = this._usuarioService.BuscarClienteporCpf(cpfCliente);
                 return Ok(response);
 
             }
@@ -140,7 +138,7 @@ namespace Ecommerce.Customer.Controllers
         {
             try
             {
-                var response = this._clienteService.BuscarEnderecoCLiente(cep, cpf);
+                var response = this._usuarioService.BuscarEnderecoCLiente(cep, cpf);
                 return Ok(response);
 
             }

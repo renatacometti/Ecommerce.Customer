@@ -5,66 +5,68 @@ using Service.Interfaces;
 using Service.ViewModel;
 using System.Text.RegularExpressions;
 using System.Linq.Dynamic.Core;
+using Domain.DTO;
 
 namespace Service.Services
 {
-    public class ClienteService : IClienteService
+    public class UsuarioService : IUsuarioService
     {
-        private readonly IClienteRepository _clienteRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
         private string ErrosValidacao { get; set; }
 
 
-        public string RetornaErros() 
+        public string RetornaErros()
         {
             return ErrosValidacao;
         }
-        public ClienteService(IClienteRepository clienteRepository, IMapper mapper)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper)
         {
-            _clienteRepository = clienteRepository;
+            _usuarioRepository = usuarioRepository;
             _mapper = mapper;
-          
+
         }
 
-        public ClienteVM GetById(int id) 
+        public UsuarioVM GetById(int id)
         {
-            var cliente = _clienteRepository.GetById(id);
-            var clienteVM = _mapper.Map<ClienteVM>(cliente);
+            var usuario = _usuarioRepository.GetById(id);
+
+            var usuarioVM = _mapper.Map<UsuarioVM>(usuario);
+            return usuarioVM;
+        }
+
+        public UsuarioVM BuscarClienteporCpf(string cpf)
+        {
+            var cliente = _usuarioRepository.BuscarClienteporCpf(cpf);
+            var clienteVM = _mapper.Map<UsuarioVM>(cliente);
             return clienteVM;
         }
 
-        public ClienteVM BuscarClienteporCpf(string cpf)
-        {
-            var cliente = _clienteRepository.BuscarClienteporCpf(cpf);
-            var clienteVM = _mapper.Map<ClienteVM>(cliente);
-            return clienteVM;
-        }
 
-    
 
         public async Task<bool> Delete(int id)
         {
-            var cliente = _clienteRepository.BuscarClienteESeusRelacionamentos(id);
-            if (cliente == null) 
+            var usuario = _usuarioRepository.BuscarClienteESeusRelacionamentos(id);
+            if (usuario == null)
             {
                 ErrosValidacao = "Cliente não encontrado";
                 return false;
             }
             else
             {
-                await this._clienteRepository.Delete(cliente);
+                await this._usuarioRepository.Delete(usuario);
                 return true;
 
             }
-   
+
 
         }
 
-        public IEnumerable<ClienteVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
+        public IEnumerable<UsuarioVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
         {
 
-         
-            var cliente = _clienteRepository.GetAll().Skip((page  - 1) * rows).Take(rows).ToList();
+
+            var cliente = _usuarioRepository.GetAll().Skip((page - 1) * rows).Take(rows).ToList();
 
 
             if (!string.IsNullOrEmpty(colunaOrdenacao) && !string.IsNullOrEmpty(direcaoOrdenacao))
@@ -76,15 +78,15 @@ namespace Service.Services
                 cliente = cliente.AsQueryable()
                     .OrderBy($"{colunaOrdenacao} {direcaoOrdenacao}")
                     .ToList();
-        
+
             }
 
-            var clienteVM = _mapper.Map<IEnumerable<ClienteVM>>(cliente);
+            var clienteVM = _mapper.Map<IEnumerable<UsuarioVM>>(cliente);
             return clienteVM;
         }
 
 
-        public async Task<bool> Update(Cliente cliente)
+        public async Task<bool> Update(Usuario cliente)
         {
 
             try
@@ -97,9 +99,9 @@ namespace Service.Services
                 if (!validaEmail(cliente.Email))
                     return false;
 
-                this._clienteRepository.Alterar(cliente);
+                this._usuarioRepository.Alterar(cliente);
 
-                if (!await _clienteRepository.SaveAllAsync())
+                if (!await _usuarioRepository.SaveAllAsync())
                     return false;
 
                 return true;
@@ -107,30 +109,30 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
-                _clienteRepository.RollbackTransaction();
+                _usuarioRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
 
         }
-        public async Task<bool> Created(Cliente cliente, string senha)
+        public async Task<bool> Created(Usuario cliente, string senha)
         {
 
             try
             {
-                if (cliente == null) 
+                if (cliente == null)
                 {
                     ErrosValidacao = "por favor informe um cliente para ser cadastrado";
                     return false;
                 }
-                    
 
-                var validarUsuario = _clienteRepository.CustomerExist(cliente.Cpf, cliente.Email);
-                if (validarUsuario) 
+
+                var validarUsuario = _usuarioRepository.CustomerExist(cliente.Cpf, cliente.Email);
+                if (validarUsuario)
                 {
                     ErrosValidacao = "Usuario já cadastrado";
                     return false;
                 }
-                    
+
 
                 if (!ValidacaodeSenha(cliente.Senha, senha))
                     return false;
@@ -139,20 +141,20 @@ namespace Service.Services
                     return false;
 
 
-                var clienteRetornado = _clienteRepository.Create(cliente);
-                _clienteRepository.EnviarEmail(cliente);
+                var clienteRetornado = _usuarioRepository.Create(cliente);
+                _usuarioRepository.EnviarEmail(cliente);
                 return true;
 
             }
             catch (Exception ex)
             {
-                _clienteRepository.RollbackTransaction();
+                _usuarioRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
 
         }
 
-        public bool ValidacaodeSenha(string senhaCliente, string senhaValidacao) 
+        public bool ValidacaodeSenha(string senhaCliente, string senhaValidacao)
         {
             if (senhaCliente != senhaValidacao)
             {
@@ -161,7 +163,7 @@ namespace Service.Services
             }
 
 
-            if (senhaCliente.Length < 8) 
+            if (senhaCliente.Length < 8)
             {
                 this.ErrosValidacao = "A senha precisa ter no mínimo 8 caracteres";
                 return false;
@@ -169,15 +171,15 @@ namespace Service.Services
 
 
             //verifica se existe pelo menos um número
-            if (!senhaCliente.Any(c => char.IsDigit(c))) 
+            if (!senhaCliente.Any(c => char.IsDigit(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter numerico";
                 return false;
             }
-               
+
 
             //verifica se existe alguma letra maiuscula
-            if (!senhaCliente.Any(c => char.IsUpper(c))) 
+            if (!senhaCliente.Any(c => char.IsUpper(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter pelo menos uma letra maiuscula";
                 return false;
@@ -186,7 +188,7 @@ namespace Service.Services
 
 
             //verifica se existe alguma letra minuscula
-            if (!senhaCliente.Any(c => char.IsLower(c))) 
+            if (!senhaCliente.Any(c => char.IsLower(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter uma letra minuscula";
                 return false;
@@ -194,40 +196,46 @@ namespace Service.Services
 
 
             //verifica se existe algum caracter especial q nao seja letras(maiúscula ou minúscula) e numeros
-            if (!Regex.IsMatch(senhaCliente, (@"[^a-zA-Z0-9]"))) 
+            if (!Regex.IsMatch(senhaCliente, (@"[^a-zA-Z0-9]")))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter especial";
                 return false;
             }
-  
+
             return true;
 
         }
 
-        public bool validaEmail(string email) 
+        public bool validaEmail(string email)
         {
             string strModelo = "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-            if (!System.Text.RegularExpressions.Regex.IsMatch(email, strModelo)) 
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email, strModelo))
             {
                 this.ErrosValidacao = "Email Invalido";
                 return false;
 
             }
-    
+
             return true;
-      
+
         }
 
         public EnderecoVM BuscarEnderecoCLiente(string cep, string cpf)
         {
-            var enderecoRetornado = _clienteRepository.BuscarEnderecoPorCliente(cep, cpf);
-            if(enderecoRetornado == null)
+            var enderecoRetornado = _usuarioRepository.BuscarEnderecoPorCliente(cep, cpf);
+            if (enderecoRetornado == null)
                 return new EnderecoVM();
 
             var endVM = _mapper.Map<EnderecoVM>(enderecoRetornado);
             return endVM;
         }
 
-     
+        public UsuarioDTO BuscarPermissoesUsuario(int idUsuario) 
+        {
+            var usuario = _usuarioRepository.BuscarPermissoesUsuario(idUsuario);
+            return usuario;
+        }
+
+
     }
 }

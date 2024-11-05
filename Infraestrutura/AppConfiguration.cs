@@ -4,11 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Repository.Repository;
 using Service.Interfaces;
 using Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infraestrutura
 {
@@ -24,14 +20,14 @@ namespace Infraestrutura
         private static void ConfigureRepository(IServiceCollection services)
         {
 
-            services.AddScoped<ICommonRepository<Cliente>, ClienteRepository>();
-            services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<ICommonRepository<Usuario>, UsuarioRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
         }
         private static void ConfigureService(IServiceCollection services)
         {
-            services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IEnderecoService, EnderecoService>();
             services.AddScoped<ITokenService, TokenService>();
         }
