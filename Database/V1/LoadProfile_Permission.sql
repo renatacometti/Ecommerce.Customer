@@ -1,5 +1,5 @@
 /****** Script do comando SelectTopNRows de SSMS  ******/
-insert into [dbo].[Perfil_Permissao]([Id_Perfil], [Id_Permissao])
+insert into [dbo].[Profile_Permission]([Id_Profile], [Id_Permission])
 values
 (1, 1),
 (1, 2),
