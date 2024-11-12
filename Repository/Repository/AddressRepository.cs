@@ -6,19 +6,19 @@ using Repository.Context;
 
 namespace Repository.Repository
 {
-    public class EnderecoRepository: BaseRepository<Endereco>, IEnderecoRepository
+    public class AddressRepository: BaseRepository<Address>, IAddressRepository
     {
         private IConfiguration _configuration;
-        public EnderecoRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
+        public AddressRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
         {
             _configuration = configuration;
         }
 
-        public void Add(Endereco endereco)
+        public void Add(Address address)
         {
-            endereco.Create_Date = DateTime.Now;
-            endereco.Update_Date = DateTime.Now;
-            _context.Endereco.Add(endereco);
+            address.Create_Date = DateTime.Now;
+            address.Update_Date = DateTime.Now;
+            _context.Endereco.Add(address);
         }
         public async Task<bool> SaveAllAsync()
         {

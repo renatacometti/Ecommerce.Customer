@@ -24,7 +24,7 @@ namespace Ecommerce.Customer.Controllers
         public ActionResult<APIResponse<string>> Sign([FromBody] User user)
         {
 
-            var token = _tokenService.Sign(user.Email, user.Senha);
+            var token = _tokenService.Sign(user.Email, user.Password);
            // return Ok(token);
            if (token == null) 
            {
@@ -46,8 +46,8 @@ namespace Ecommerce.Customer.Controllers
         }
         //[AllowAnonymous]
         [Authorize]
-        [HttpGet("ValidaToken/{token}")]
-        public ActionResult ValidaToken([FromRoute] string token)
+        [HttpGet("ValidateToken/{token}")]
+        public ActionResult ValidateToken([FromRoute] string token)
         {
 
             var response = _tokenService.ValidateToken(token);

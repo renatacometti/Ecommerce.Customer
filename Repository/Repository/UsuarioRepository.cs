@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Repository.Repository
 {
-    public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
+    public class UsuarioRepository : BaseRepository<User>, IUserRepository
     {
         private IConfiguration _configuration;
         public UsuarioRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
@@ -19,18 +19,18 @@ namespace Repository.Repository
             _configuration = configuration;
         }
 
-        public User ValidaCliente(string email, string senha)
+        public User ValidateUser(string email, string senha)
         {
 
-            var user = _context.Usuario.Where(c => c.Email == email && c.Senha == senha)
-                .Select(user => new User() { Email = user.Email, Senha = user.Senha, Id = user.Id }).SingleOrDefault();
+            var user = _context.Usuario.Where(c => c.Email == email && c.Password == senha)
+                .Select(user => new User() { Email = user.Email, Password = user.Password, Id = user.Id }).SingleOrDefault();
 
             return user;
 
         }
 
 
-        public UsuarioDTO BuscarPermissoesUsuario(int idUsuario)
+        public UserDTO SearchInfosToken(int idUsuario)
         {
 
             //var user = (from u in _context.Usuario
@@ -44,27 +44,27 @@ namespace Repository.Repository
             //return user;
 
             var userTwo = (from user in _context.Usuario
-                           join p in _context.Perfil on user.Id_Perfil equals p.Id
-                           join pp1 in _context.Perfil_Permissao on p.Id equals pp1.Id_Perfil
-                           join per in _context.Permissao on pp1.Id_Permissao equals per.Id
+                           join p in _context.Perfil on user.Id_Profile equals p.Id
+                           join pp1 in _context.Perfil_Permissao on p.Id equals pp1.ProfileId
+                           join per in _context.Permissao on pp1.PermissionId equals per.Id
                            where user.Id == idUsuario
-                           select new UsuarioDTO
+                           select new UserDTO
                            {
                                Id = user.Id,
-                               Nome = user.Nome,
+                               Nome = user.Name,
                                Email = user.Email,
-                               Perfil = new Perfil
+                               Perfil = new Profile
                                {
                                    Id = p.Id,
-                                   Nome = p.Nome
+                                   Name = p.Name
                                },
                                Permissoes = (from perm in _context.Permissao
-                                             join pp in _context.Perfil_Permissao on perm.Id equals pp.Id_Permissao
-                                             where pp.Id_Perfil == p.Id
-                                             select new Permissao
+                                             join pp in _context.Perfil_Permissao on perm.Id equals pp.PermissionId
+                                             where pp.ProfileId == p.Id
+                                             select new PermissionDTO
                                              {
                                                  Id = perm.Id,
-                                                 Nome = perm.Nome
+                                                 Name = perm.Name
                                              }).ToList()
                            }).FirstOrDefault();
 
@@ -81,14 +81,14 @@ namespace Repository.Repository
             return false;
         }
 
-        public Usuario BuscarClienteporCpf(string cpf)
+        public User SearchUserByCpf(string cpf)
         {
             var cliente = _context.Usuario.Where(c => c.Cpf == cpf).FirstOrDefault();
             return cliente;
 
         }
 
-        public Usuario GetByIDTest(int id)
+        public User GetByIDTest(int id)
         {
 
             var user = _context.Usuario.Where(c => c.Id == id).FirstOrDefault();
@@ -96,7 +96,7 @@ namespace Repository.Repository
 
         }
 
-        public Usuario GetByIDTestTwo(int id)
+        public User GetByIDTestTwo(int id)
         {
 
             var user = (from c in _context.Usuario
@@ -106,17 +106,17 @@ namespace Repository.Repository
 
         }
 
-        public Endereco BuscarEnderecoPorCliente(string cep, string cpf)
+        public Address SearchAddressByUser(string cep, string cpf)
         {
             var enderecoRetornado = (from c in _context.Usuario
                                      join e in _context.Endereco on c.Id equals e.Id_Cliente
-                                     where c.Cpf == cpf && e.Cep == cep
+                                     where c.Cpf == cpf && e.PostalCode == cep
                                      select e).FirstOrDefault();
             return enderecoRetornado;
 
         }
 
-        public void EnviarEmail(Usuario cliente)
+        public void SendEmail(User cliente)
         {
 
             CultureInfo cult = new CultureInfo("pt-BR");
@@ -135,7 +135,7 @@ namespace Repository.Repository
             MailMessage email = new MailMessage(de, para);
 
             email.IsBodyHtml = true;
-            email.Subject = "Seja bem vindo " + cliente.Nome; // titulo do email
+            email.Subject = "Seja bem vindo " + cliente.Name; // titulo do email
 
             var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
             using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
@@ -143,9 +143,9 @@ namespace Repository.Repository
                 var strMail = objReader.ReadToEnd();
 
 
-                strMail = strMail.Replace("[Nome]", cliente.Nome);
+                strMail = strMail.Replace("[Nome]", cliente.Name);
                 strMail = strMail.Replace("[Email]", cliente.Email);
-                strMail = strMail.Replace("[Senha]", cliente.Senha);
+                strMail = strMail.Replace("[Senha]", cliente.Password);
 
                 email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
                 email.Body = strMail;
@@ -198,22 +198,22 @@ namespace Repository.Repository
             //}
         }
 
-        public Usuario BuscarClienteESeusRelacionamentos(int idCliente)
+        public User SearchUserAndTheirRelationships(int idCliente)
         {
 
             var cliente = _context.Usuario.AsNoTracking()
-                   .Include(p => p.Enderecos)
+                   .Include(p => p.Addresses)
                     .Where(c => c.Id == idCliente)
                                  .SingleOrDefault();
 
             return cliente;
         }
 
-        public void Alterar(Usuario cliente)
+        public void Change(User cliente)
         {
             var buscaClienteERelacionamento = _context.Usuario
              .Where(p => p.Id == cliente.Id)
-             .Include(p => p.Enderecos)
+             .Include(p => p.Addresses)
             .SingleOrDefault();
 
             if (buscaClienteERelacionamento != null)
@@ -223,9 +223,9 @@ namespace Repository.Repository
             }
 
 
-            foreach (var enderecoModel in cliente.Enderecos)
+            foreach (var enderecoModel in cliente.Addresses)
             {
-                var existeEndereco = buscaClienteERelacionamento.Enderecos
+                var existeEndereco = buscaClienteERelacionamento.Addresses
                     .Where(c => c.Id == enderecoModel.Id && c.Id != default(int))
                     .SingleOrDefault();
 
@@ -238,20 +238,20 @@ namespace Repository.Repository
                 else
                 {
                     // Insere endereco
-                    var novoEndereco = new Endereco
+                    var novoEndereco = new Address
                     {
-                        Rua = enderecoModel.Rua,
-                        Numero = enderecoModel.Numero,
-                        Bairro = enderecoModel.Bairro,
-                        Cidade = enderecoModel.Cidade,
-                        Uf = enderecoModel.Uf,
-                        Cep = enderecoModel.Cep,
-                        Nome_Endereco = enderecoModel.Nome_Endereco,
+                        Street = enderecoModel.Street,
+                        Number = enderecoModel.Number,
+                        District = enderecoModel.District,
+                        City = enderecoModel.City,
+                        State = enderecoModel.State,
+                        PostalCode = enderecoModel.PostalCode,
+                        AddressName = enderecoModel.AddressName,
                         Create_Date = DateTime.Now,
                         Update_Date = DateTime.Now,
 
                     };
-                    buscaClienteERelacionamento.Enderecos.Add(novoEndereco);
+                    buscaClienteERelacionamento.Addresses.Add(novoEndereco);
                 }
 
             }
@@ -263,7 +263,5 @@ namespace Repository.Repository
             return await _context.SaveChangesAsync() > 0;
 
         }
-
-
     }
 }

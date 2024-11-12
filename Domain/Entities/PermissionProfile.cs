@@ -5,23 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
     [Table("Perfil_Permissao")]
-    public class Perfil_Permissao: BaseEntity
+    public class PermissionProfile: BaseEntity
     {
         [Key]
         [Column("Id")]
         public override int Id { get; set; }
 
-
-        public int Id_Perfil { get; set; }
+        public int ProfileId { get; set; }
 
         [ForeignKey("Id_Perfil")]
-        public virtual Perfil Perfil { get; set; }
+        public virtual Profile Profile { get; set; }
 
-
-        public int Id_Permissao { get; set; }
+        public int PermissionId { get; set; }
 
         [ForeignKey("Id_Permissao")]
-        public virtual Permissao Permissao { get; set; }
+        public virtual Permission Permission { get; set; }
 
 
     }

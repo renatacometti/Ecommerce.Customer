@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class EnderecoService: IEnderecoService
+    public class EnderecoService: IAddressService
     {
-        private readonly IEnderecoRepository _enderecoRepository;
+        private readonly IAddressRepository _enderecoRepository;
         private readonly IMapper _mapper;
         private string ErrosValidacao { get; set; }
 
@@ -21,13 +21,13 @@ namespace Service.Services
         {
             return ErrosValidacao;
         }
-        public EnderecoService(IEnderecoRepository enderecoRepository, IMapper mapper)
+        public EnderecoService(IAddressRepository enderecoRepository, IMapper mapper)
         {
             _enderecoRepository = enderecoRepository;
             _mapper = mapper;
 
         }
-        public async Task<bool> CadastrarNovoEnderecoParaUsuario(Endereco endereco)
+        public async Task<bool> RegisterNewAddressForUser(Address endereco)
         {
             try
             {

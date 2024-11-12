@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
     [Table("Perfil")]
-    public class Perfil : BaseEntity
+    public class Profile : BaseEntity
     {
         [Key]
         [Column("Id")]
@@ -14,18 +14,18 @@ namespace Domain.Entities
         [Required]
         [MaxLength(50)]
         [Column("Nome")]
-        public string Nome { get; set; }
+        public string Name { get; set; }
 
         [MaxLength(255)]
         [Column("Descricao")]
-        public string Descrição { get; set; }
+        public string Description { get; set; }
 
         [Column("Ativo")]
-        public bool Ativo { get; set; }
+        public bool Active { get; set; }
 
-        public virtual ICollection<Perfil_Permissao> Perfil_Permissao { get; set; }
+        public virtual ICollection<PermissionProfile> PermissionProfile { get; set; }
 
-        public virtual ICollection<Usuario> Usuarios { get; set; }
+        public virtual ICollection<User> Users { get; set; }
 
     }
 }

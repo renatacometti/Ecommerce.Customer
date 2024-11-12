@@ -7,10 +7,9 @@ using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Service.Services
 {
@@ -18,9 +17,9 @@ namespace Service.Services
     {
         //private readonly SymmetricSecurityKey _chave; // usa para o metodo CreateToken
         private readonly SymmetricSecurityKey _key;
-        private readonly IUsuarioRepository _clienteRepository;
+        private readonly IUserRepository _clienteRepository;
 
-        public TokenService(IConfiguration config, IUsuarioRepository clienteRepository)
+        public TokenService(IConfiguration config, IUserRepository clienteRepository)
         {
             //_chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["chaveSecreta"])); // // usa para o metodo CreateToken
             _key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config["Jwt:Key"]));
@@ -84,15 +83,15 @@ namespace Service.Services
         public string CreateToken2(User user)
         {
             var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-            var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
+            var permissoesUsuario = _clienteRepository.SearchInfosToken(user.Id);
 
             // Inicializando a lista de claims
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("nomeUsuario", permissoesUsuario.Nome),
-                new Claim("perfil", permissoesUsuario.Perfil.Nome),
-                //new Claim("permissoes", permissoesUsuario.Permissoes)
+                new Claim("perfil", permissoesUsuario.Perfil.Name),
+                
             };
 
             // Iterando sobre cada permissão e adicionando como claim individual
@@ -100,7 +99,7 @@ namespace Service.Services
             {
                 foreach (var permissao in permissoesUsuario.Permissoes)
                 {
-                    claims.Add(new Claim("permissao", permissao.Nome)); // Ajuste a propriedade conforme necessário
+                    claims.Add(new Claim("permissao", permissao.Name)); // Ajuste a propriedade conforme necessário
                 }
             }
 
@@ -152,7 +151,7 @@ namespace Service.Services
         public string Sign(string email, string senha)
         {
             string token = null;
-            var user = _clienteRepository.ValidaCliente(email, senha);
+            var user = _clienteRepository.ValidateUser(email, senha);
             if (user.Email != null)
             {
                 token = CreateToken2(user);

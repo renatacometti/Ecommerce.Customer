@@ -1,51 +1,46 @@
-﻿
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
-
 
 namespace Ecommerce.Customer.Controllers
 {
     //[ApiController]
     [Route("api/[controller]")]
     
-    public class UsuarioController : BaseController
+    public class UserController : BaseController
     {
-        private readonly IUsuarioService _usuarioService;
+        private readonly IUserService _userService;
 
-        public UsuarioController(IUsuarioService usuarioService)
+        public UserController(IUserService userService)
         {
-            _usuarioService = usuarioService;
+            _userService = userService;
         }
 
         //[Authorize]
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows, [FromQuery] string colunaOrdenacao, [FromQuery] string direcaoOrdenacao)
+        public IActionResult GetAll([FromQuery] int page, [FromQuery]int rows, [FromQuery] string SortColumn, [FromQuery] string SortDirection)
         {
             try
             {
-                var response = this._usuarioService.GetAll(page, rows, colunaOrdenacao, direcaoOrdenacao);
+                var response = this._userService.GetAll(page, rows, SortColumn, SortDirection);
                 return Ok(response);
-
             }
             catch (Exception ex)
             {
 
                 return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar os clientes", ex);
             }
-            
-
         }
 
      
-        [HttpGet("GetbyId/{idCliente}")]
-        public IActionResult GetbyId([FromRoute] int idCliente)
+        [HttpGet("GetbyId/{userId}")]
+        public IActionResult GetbyId([FromRoute] int userId)
         {
             try
             {
-                var response = this._usuarioService.GetById(idCliente);
+                var response = this._userService.GetById(userId);
                 return Ok(response);
 
             }
@@ -58,14 +53,14 @@ namespace Ecommerce.Customer.Controllers
 
         }
 
-        [HttpDelete("{idCliente}")]
-        public async Task<IActionResult> Delete([FromRoute] int idCliente)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Delete([FromRoute] int userId)
         {
    
             try
             {
-                if (!await this._usuarioService.Delete(idCliente))
-                    return Conflict(this._usuarioService.RetornaErros());
+                if (!await this._userService.Delete(userId))
+                    return Conflict(this._userService.RetornaErros());
                 else
                     return Ok();
 
@@ -74,19 +69,16 @@ namespace Ecommerce.Customer.Controllers
             {
                 return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar excluir o Cliente", ex);
             }
-
-
         }
 
-
         [HttpPost]
-        [Route("Created/{senha}")]
-        public async Task<IActionResult> Created([FromBody] Usuario cliente, [FromRoute] string senha)
+        [Route("Created/{password}")]
+        public async Task<IActionResult> Created([FromBody] User user, [FromRoute] string password)
         {
             try
             {
-                if (!await this._usuarioService.Created(cliente, senha))
-                    return Conflict(this._usuarioService.RetornaErros());
+                if (!await this._userService.Created(user, password))
+                    return Conflict(this._userService.RetornaErros());
                 else
                      return Ok();
             }
@@ -98,12 +90,12 @@ namespace Ecommerce.Customer.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Usuario cliente)
+        public async Task<IActionResult> Update([FromBody] User user)
         {
             try
             {
-                if (!await this._usuarioService.Update(cliente))
-                    return Conflict(this._usuarioService.RetornaErros());
+                if (!await this._userService.Update(user))
+                    return Conflict(this._userService.RetornaErros());
                 else
                     return Ok();
             }
@@ -115,12 +107,12 @@ namespace Ecommerce.Customer.Controllers
         }
 
         [Authorize]
-        [HttpGet("BuscarClienteporCpf/{cpfCliente}")]
-        public IActionResult BuscarClienteporCpf([FromRoute] string cpfCliente)
+        [HttpGet("SearchCustomerByCpf/{userCpf}")]
+        public IActionResult SearchCustomerByCpf([FromRoute] string userCpf)
         {
             try
             {
-                var response = this._usuarioService.BuscarClienteporCpf(cpfCliente);
+                var response = this._userService.SearchCustomerByCpf(userCpf);
                 return Ok(response);
 
             }
@@ -133,12 +125,12 @@ namespace Ecommerce.Customer.Controllers
 
         }
 
-        [HttpGet("RetornaEndereco/{cep}/{cpf}")]
-        public IActionResult RetornaEndereco([FromRoute]string cep, [FromRoute] string cpf) 
+        [HttpGet("ReturnAddress/{postalCode}/{cpf}")]
+        public IActionResult ReturnAddress([FromRoute]string postalCode, [FromRoute] string cpf) 
         {
             try
             {
-                var response = this._usuarioService.BuscarEnderecoCLiente(cep, cpf);
+                var response = this._userService.BuscarEnderecoUsuario(postalCode, cpf);
                 return Ok(response);
 
             }
@@ -148,8 +140,6 @@ namespace Ecommerce.Customer.Controllers
                 return TratarExcecao(ControllerContext, "Ocorreu um erro ao tentar recuperar o endereco", ex);
             }
         }
-
-   
 
     }
 }

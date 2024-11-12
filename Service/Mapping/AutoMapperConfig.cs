@@ -6,17 +6,17 @@ using Service.ViewModel;
 
 namespace Service.Mapping
 {
-    public class AutoMapperConfig: Profile
+    public class AutoMapperConfig: AutoMapper.Profile
     {
         public AutoMapperConfig()
         {
             AllowNullCollections = true;
             AllowNullDestinationValues = true;
 
-            CreateMap<UsuarioDTO, UsuarioVM>().ReverseMap();
-            CreateMap<UsuarioDTO, Usuario>().ReverseMap();
-            CreateMap<UsuarioVM, Usuario>().ReverseMap();
-            CreateMap<EnderecoVM, Endereco>().ReverseMap();
+            CreateMap<UserDTO, UserVM>().ReverseMap();
+            CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<UserVM, User>().ReverseMap();
+            CreateMap<AddressVM, Address>().ReverseMap();
           
 
         }

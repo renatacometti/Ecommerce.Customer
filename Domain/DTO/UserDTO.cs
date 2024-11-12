@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 namespace Domain.DTO
 {
-    public struct UsuarioDTO
+    public struct UserDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -11,8 +11,8 @@ namespace Domain.DTO
         public DateTime Data_Nascimento { get; set; }
         public string Telefone { get; set; }
         public string Ativo { get; set; }
-        public Perfil Perfil { get; set; }
-        public ICollection<Endereco> Enderecos { get; set; }
-        public ICollection<Permissao> Permissoes { get; set; }
+        public Profile Perfil { get; set; }
+        public ICollection<AddressDTO> Enderecos { get; set; }
+        public ICollection<PermissionDTO> Permissoes { get; set; }
     }
 }

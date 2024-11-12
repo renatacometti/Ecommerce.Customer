@@ -1,6 +1,4 @@
 ﻿using Domain.Repository;
-
-
 namespace Repository.Context
 {
     public class TransactionRepository: ITransactionRepository

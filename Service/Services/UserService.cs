@@ -9,9 +9,9 @@ using Domain.DTO;
 
 namespace Service.Services
 {
-    public class UsuarioService : IUsuarioService
+    public class UserService : IUserService
     {
-        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private string ErrosValidacao { get; set; }
 
@@ -20,41 +20,39 @@ namespace Service.Services
         {
             return ErrosValidacao;
         }
-        public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
-            _usuarioRepository = usuarioRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
 
         }
 
-        public UsuarioVM GetById(int id)
+        public UserVM GetById(int id)
         {
-            var usuario = _usuarioRepository.GetById(id);
+            var usuario = _userRepository.GetById(id);
 
-            var usuarioVM = _mapper.Map<UsuarioVM>(usuario);
+            var usuarioVM = _mapper.Map<UserVM>(usuario);
             return usuarioVM;
         }
 
-        public UsuarioVM BuscarClienteporCpf(string cpf)
+        public UserVM SearchCustomerByCpf(string cpf)
         {
-            var cliente = _usuarioRepository.BuscarClienteporCpf(cpf);
-            var clienteVM = _mapper.Map<UsuarioVM>(cliente);
-            return clienteVM;
+            var usuario = _userRepository.SearchUserByCpf(cpf);
+            var usuarioVM = _mapper.Map<UserVM>(usuario);
+            return usuarioVM;
         }
-
-
 
         public async Task<bool> Delete(int id)
         {
-            var usuario = _usuarioRepository.BuscarClienteESeusRelacionamentos(id);
+            var usuario = _userRepository.SearchUserAndTheirRelationships(id);
             if (usuario == null)
             {
-                ErrosValidacao = "Cliente não encontrado";
+                ErrosValidacao = "Usuário não encontrado";
                 return false;
             }
             else
             {
-                await this._usuarioRepository.Delete(usuario);
+                await this._userRepository.Delete(usuario);
                 return true;
 
             }
@@ -62,12 +60,10 @@ namespace Service.Services
 
         }
 
-        public IEnumerable<UsuarioVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
+        public IEnumerable<UserVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
         {
 
-
-            var cliente = _usuarioRepository.GetAll().Skip((page - 1) * rows).Take(rows).ToList();
-
+            var usuario = _userRepository.GetAll().Skip((page - 1) * rows).Take(rows).ToList();
 
             if (!string.IsNullOrEmpty(colunaOrdenacao) && !string.IsNullOrEmpty(direcaoOrdenacao))
             {
@@ -75,33 +71,32 @@ namespace Service.Services
                 //string sortExpression = colunaOrdenacao + (sortAscending ? " ascending" : " descending");
 
                 // Construindo a expressão de ordenação dinâmica
-                cliente = cliente.AsQueryable()
+                usuario = usuario.AsQueryable()
                     .OrderBy($"{colunaOrdenacao} {direcaoOrdenacao}")
                     .ToList();
 
             }
 
-            var clienteVM = _mapper.Map<IEnumerable<UsuarioVM>>(cliente);
-            return clienteVM;
+            var usuarioVM = _mapper.Map<IEnumerable<UserVM>>(usuario);
+            return usuarioVM;
         }
 
-
-        public async Task<bool> Update(Usuario cliente)
+        public async Task<bool> Update(User usuario)
         {
 
             try
             {
-                if (cliente.Id == 0)
+                if (usuario.Id == 0)
                 {
-                    ErrosValidacao = "por favor informe um cliente para ser Alterado";
+                    ErrosValidacao = "por favor informe um usuário para ser Alterado";
                     return false;
                 }
-                if (!validaEmail(cliente.Email))
+                if (!validaEmail(usuario.Email))
                     return false;
 
-                this._usuarioRepository.Alterar(cliente);
+                this._userRepository.Change(usuario);
 
-                if (!await _usuarioRepository.SaveAllAsync())
+                if (!await _userRepository.SaveAllAsync())
                     return false;
 
                 return true;
@@ -109,24 +104,24 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
-                _usuarioRepository.RollbackTransaction();
+                _userRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
 
         }
-        public async Task<bool> Created(Usuario cliente, string senha)
+        public async Task<bool> Created(User usuario, string senha)
         {
 
             try
             {
-                if (cliente == null)
+                if (usuario == null)
                 {
-                    ErrosValidacao = "por favor informe um cliente para ser cadastrado";
+                    ErrosValidacao = "por favor informe um usuário para ser cadastrado";
                     return false;
                 }
 
 
-                var validarUsuario = _usuarioRepository.CustomerExist(cliente.Cpf, cliente.Email);
+                var validarUsuario = _userRepository.CustomerExist(usuario.Cpf, usuario.Email);
                 if (validarUsuario)
                 {
                     ErrosValidacao = "Usuario já cadastrado";
@@ -134,36 +129,36 @@ namespace Service.Services
                 }
 
 
-                if (!ValidacaodeSenha(cliente.Senha, senha))
+                if (!ValidacaodeSenha(usuario.Password, senha))
                     return false;
 
-                if (!validaEmail(cliente.Email))
+                if (!validaEmail(usuario.Email))
                     return false;
 
 
-                var clienteRetornado = _usuarioRepository.Create(cliente);
-                _usuarioRepository.EnviarEmail(cliente);
+                var usuarioRetornado = _userRepository.Create(usuario);
+                _userRepository.SendEmail(usuario);
                 return true;
 
             }
             catch (Exception ex)
             {
-                _usuarioRepository.RollbackTransaction();
+                _userRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
 
         }
 
-        public bool ValidacaodeSenha(string senhaCliente, string senhaValidacao)
+        public bool ValidacaodeSenha(string senhaUsuario, string senhaValidacao)
         {
-            if (senhaCliente != senhaValidacao)
+            if (senhaUsuario != senhaValidacao)
             {
                 this.ErrosValidacao = "As senhas não conferem";
                 return false;
             }
 
 
-            if (senhaCliente.Length < 8)
+            if (senhaUsuario.Length < 8)
             {
                 this.ErrosValidacao = "A senha precisa ter no mínimo 8 caracteres";
                 return false;
@@ -171,7 +166,7 @@ namespace Service.Services
 
 
             //verifica se existe pelo menos um número
-            if (!senhaCliente.Any(c => char.IsDigit(c)))
+            if (!senhaUsuario.Any(c => char.IsDigit(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter numerico";
                 return false;
@@ -179,7 +174,7 @@ namespace Service.Services
 
 
             //verifica se existe alguma letra maiuscula
-            if (!senhaCliente.Any(c => char.IsUpper(c)))
+            if (!senhaUsuario.Any(c => char.IsUpper(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter pelo menos uma letra maiuscula";
                 return false;
@@ -188,7 +183,7 @@ namespace Service.Services
 
 
             //verifica se existe alguma letra minuscula
-            if (!senhaCliente.Any(c => char.IsLower(c)))
+            if (!senhaUsuario.Any(c => char.IsLower(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter uma letra minuscula";
                 return false;
@@ -196,7 +191,7 @@ namespace Service.Services
 
 
             //verifica se existe algum caracter especial q nao seja letras(maiúscula ou minúscula) e numeros
-            if (!Regex.IsMatch(senhaCliente, (@"[^a-zA-Z0-9]")))
+            if (!Regex.IsMatch(senhaUsuario, (@"[^a-zA-Z0-9]")))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter especial";
                 return false;
@@ -220,22 +215,21 @@ namespace Service.Services
 
         }
 
-        public EnderecoVM BuscarEnderecoCLiente(string cep, string cpf)
+        public AddressVM BuscarEnderecoUsuario(string cep, string cpf)
         {
-            var enderecoRetornado = _usuarioRepository.BuscarEnderecoPorCliente(cep, cpf);
+            var enderecoRetornado = _userRepository.SearchAddressByUser(cep, cpf);
             if (enderecoRetornado == null)
-                return new EnderecoVM();
+                return new AddressVM();
 
-            var endVM = _mapper.Map<EnderecoVM>(enderecoRetornado);
+            var endVM = _mapper.Map<AddressVM>(enderecoRetornado);
             return endVM;
         }
 
-        public UsuarioDTO BuscarPermissoesUsuario(int idUsuario) 
+        public UserDTO BuscarInfosToken(int idUsuario) 
         {
-            var usuario = _usuarioRepository.BuscarPermissoesUsuario(idUsuario);
+            var usuario = _userRepository.SearchInfosToken(idUsuario);
             return usuario;
         }
-
 
     }
 }
