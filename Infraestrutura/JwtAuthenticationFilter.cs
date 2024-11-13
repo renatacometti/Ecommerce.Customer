@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 
-//classe criada para decorar as controlers para usar o Token - nao estou usando
+//classe criada para decorar as controlers para usar o Token 
 public class JwtAuthenticationFilter : Attribute, IAuthorizationFilter
 {
     private readonly SymmetricSecurityKey _key;
@@ -28,8 +28,6 @@ public class JwtAuthenticationFilter : Attribute, IAuthorizationFilter
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        //var key = Convert.FromBase64String(secretKey);
-
         try
         {
             var validationParameters = new TokenValidationParameters

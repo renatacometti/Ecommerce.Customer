@@ -6,7 +6,7 @@ using Repository.Context;
 
 namespace Repository.Repository
 {
-    public class AddressRepository: BaseRepository<Address>, IAddressRepository
+    public class AddressRepository: BaseRepository<AddressEntity>, IAddressRepository
     {
         private IConfiguration _configuration;
         public AddressRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
@@ -14,11 +14,11 @@ namespace Repository.Repository
             _configuration = configuration;
         }
 
-        public void Add(Address address)
+        public void Add(AddressEntity address)
         {
             address.Create_Date = DateTime.Now;
             address.Update_Date = DateTime.Now;
-            _context.Endereco.Add(address);
+            _context.Address.Add(address);
         }
         public async Task<bool> SaveAllAsync()
         {

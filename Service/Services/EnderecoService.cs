@@ -27,7 +27,7 @@ namespace Service.Services
             _mapper = mapper;
 
         }
-        public async Task<bool> RegisterNewAddressForUser(Address endereco)
+        public async Task<bool> RegisterNewAddressForUser(AddressEntity endereco)
         {
             try
             {

@@ -3,18 +3,18 @@ using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public interface IUserRepository: ICommonRepository<User>
+    public interface IUserRepository: ICommonRepository<UserEntity>
     {
-        User ValidateUser(string email, string password);
-        bool CustomerExist(string cpf, string email);
-        void SendEmail(User user);
-        User SearchUserAndTheirRelationships(int userId);
-        void Change(User user);
+        UserEntity ValidateUser(string passaword, string password);
+        bool UserExist(string cpf, string email);
+        void SendEmail(UserEntity user);
+        UserEntity SearchUserAndTheirRelationships(int userId);
+        void Change(UserEntity user);
         Task<bool> SaveAllAsync();
-        User SearchUserByCpf(string cpf);
-        Address SearchAddressByUser(string postalCode, string cpf);
-        User GetByIDTest(int id);
-        User GetByIDTestTwo(int id);
+        UserEntity SearchUserByCpf(string cpf);
+        AddressEntity SearchAddressByUser(string postalCode, string cpf);
+        UserEntity GetByIDTest(int id);
+        UserEntity GetByIDTestTwo(int id);
         UserDTO SearchInfosToken(int userId);
 
     }

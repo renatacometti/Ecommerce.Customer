@@ -11,7 +11,7 @@ namespace Service.Interfaces
     {
         //string CreateToken(User user);
         bool ValidateToken(string token);
-        string CreateToken2(User user);
+        string CreateToken(UserEntity user);
 
         String Sign(string email, string senha);
     }

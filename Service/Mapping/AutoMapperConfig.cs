@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Domain.DTO;
+﻿using Domain.DTO;
 using Domain.Entities;
 using Service.ViewModel;
 
@@ -14,10 +13,9 @@ namespace Service.Mapping
             AllowNullDestinationValues = true;
 
             CreateMap<UserDTO, UserVM>().ReverseMap();
-            CreateMap<UserDTO, User>().ReverseMap();
-            CreateMap<UserVM, User>().ReverseMap();
-            CreateMap<AddressVM, Address>().ReverseMap();
-          
+            CreateMap<UserDTO, UserEntity>().ReverseMap();
+            CreateMap<PermissionDTO, PermissionEntity>().ReverseMap();
+            CreateMap<AddressVM, AddressEntity>().ReverseMap();
 
         }
     }

@@ -20,9 +20,11 @@ namespace Infraestrutura
         private static void ConfigureRepository(IServiceCollection services)
         {
 
-            services.AddScoped<ICommonRepository<User>, UsuarioRepository>();
-            services.AddScoped<IUserRepository, UsuarioRepository>();
+            //services.AddScoped<ICommonRepository<User>, UserRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
         }
         private static void ConfigureService(IServiceCollection services)
@@ -31,5 +33,6 @@ namespace Infraestrutura
             services.AddScoped<IAddressService, EnderecoService>();
             services.AddScoped<ITokenService, TokenService>();
         }
+
     }
 }

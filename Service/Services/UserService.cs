@@ -56,8 +56,6 @@ namespace Service.Services
                 return true;
 
             }
-
-
         }
 
         public IEnumerable<UserVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao)
@@ -81,20 +79,20 @@ namespace Service.Services
             return usuarioVM;
         }
 
-        public async Task<bool> Update(User usuario)
+        public async Task<bool> Update(UserEntity user)
         {
 
             try
             {
-                if (usuario.Id == 0)
+                if (user.Id == 0)
                 {
                     ErrosValidacao = "por favor informe um usuário para ser Alterado";
                     return false;
                 }
-                if (!validaEmail(usuario.Email))
+                if (!validateEmail(user.Email))
                     return false;
 
-                this._userRepository.Change(usuario);
+                this._userRepository.Change(user);
 
                 if (!await _userRepository.SaveAllAsync())
                     return false;
@@ -109,19 +107,19 @@ namespace Service.Services
             }
 
         }
-        public async Task<bool> Created(User usuario, string senha)
+        public async Task<bool> Created(UserEntity user, string password)
         {
 
             try
             {
-                if (usuario == null)
+                if (user == null)
                 {
                     ErrosValidacao = "por favor informe um usuário para ser cadastrado";
                     return false;
                 }
 
 
-                var validarUsuario = _userRepository.CustomerExist(usuario.Cpf, usuario.Email);
+                var validarUsuario = _userRepository.UserExist(user.Cpf, user.Email);
                 if (validarUsuario)
                 {
                     ErrosValidacao = "Usuario já cadastrado";
@@ -129,15 +127,15 @@ namespace Service.Services
                 }
 
 
-                if (!ValidacaodeSenha(usuario.Password, senha))
+                if (!ValidatePassword(user.Password, password))
                     return false;
 
-                if (!validaEmail(usuario.Email))
+                if (!validateEmail(user.Email))
                     return false;
 
 
-                var usuarioRetornado = _userRepository.Create(usuario);
-                _userRepository.SendEmail(usuario);
+                var returnedUser = _userRepository.Create(user);
+                _userRepository.SendEmail(user);
                 return true;
 
             }
@@ -149,16 +147,16 @@ namespace Service.Services
 
         }
 
-        public bool ValidacaodeSenha(string senhaUsuario, string senhaValidacao)
+        public bool ValidatePassword(string userPassword, string validatePassword)
         {
-            if (senhaUsuario != senhaValidacao)
+            if (userPassword != validatePassword)
             {
                 this.ErrosValidacao = "As senhas não conferem";
                 return false;
             }
 
 
-            if (senhaUsuario.Length < 8)
+            if (userPassword.Length < 8)
             {
                 this.ErrosValidacao = "A senha precisa ter no mínimo 8 caracteres";
                 return false;
@@ -166,7 +164,7 @@ namespace Service.Services
 
 
             //verifica se existe pelo menos um número
-            if (!senhaUsuario.Any(c => char.IsDigit(c)))
+            if (!userPassword.Any(c => char.IsDigit(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter numerico";
                 return false;
@@ -174,7 +172,7 @@ namespace Service.Services
 
 
             //verifica se existe alguma letra maiuscula
-            if (!senhaUsuario.Any(c => char.IsUpper(c)))
+            if (!userPassword.Any(c => char.IsUpper(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter pelo menos uma letra maiuscula";
                 return false;
@@ -183,7 +181,7 @@ namespace Service.Services
 
 
             //verifica se existe alguma letra minuscula
-            if (!senhaUsuario.Any(c => char.IsLower(c)))
+            if (!userPassword.Any(c => char.IsLower(c)))
             {
                 this.ErrosValidacao = "A senha precisa ter uma letra minuscula";
                 return false;
@@ -191,7 +189,7 @@ namespace Service.Services
 
 
             //verifica se existe algum caracter especial q nao seja letras(maiúscula ou minúscula) e numeros
-            if (!Regex.IsMatch(senhaUsuario, (@"[^a-zA-Z0-9]")))
+            if (!Regex.IsMatch(userPassword, (@"[^a-zA-Z0-9]")))
             {
                 this.ErrosValidacao = "A senha precisa ter um caracter especial";
                 return false;
@@ -201,7 +199,7 @@ namespace Service.Services
 
         }
 
-        public bool validaEmail(string email)
+        public bool validateEmail(string email)
         {
             string strModelo = "^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
             if (!System.Text.RegularExpressions.Regex.IsMatch(email, strModelo))
@@ -215,20 +213,20 @@ namespace Service.Services
 
         }
 
-        public AddressVM BuscarEnderecoUsuario(string cep, string cpf)
+        public AddressVM SearchUserAddress(string postalCode, string cpf)
         {
-            var enderecoRetornado = _userRepository.SearchAddressByUser(cep, cpf);
-            if (enderecoRetornado == null)
+            var returnedAddress = _userRepository.SearchAddressByUser(postalCode, cpf);
+            if (returnedAddress == null)
                 return new AddressVM();
 
-            var endVM = _mapper.Map<AddressVM>(enderecoRetornado);
-            return endVM;
+            var addressVM = _mapper.Map<AddressVM>(returnedAddress);
+            return addressVM;
         }
 
-        public UserDTO BuscarInfosToken(int idUsuario) 
+        public UserDTO SearchInfosToken(int userId) 
         {
-            var usuario = _userRepository.SearchInfosToken(idUsuario);
-            return usuario;
+            var user = _userRepository.SearchInfosToken(userId);
+            return user;
         }
 
     }

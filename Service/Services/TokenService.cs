@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -21,66 +18,14 @@ namespace Service.Services
 
         public TokenService(IConfiguration config, IUserRepository clienteRepository)
         {
-            //_chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["chaveSecreta"])); // // usa para o metodo CreateToken
+            //_chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["chaveSecreta"])); // usa para o metodo CreateToken
             _key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config["Jwt:Key"]));
 
             _clienteRepository = clienteRepository;
 
         }
 
-
-
-        //public string CreateToken(User user)
-        //{
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(JwtRegisteredClaimNames.Email, user.Email)
-        //    };
-        //    var credenciais = new SigningCredentials(_chave, SecurityAlgorithms.HmacSha512Signature);
-        //    var tokenDecriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(claims),
-        //        Expires = DateTime.Now.AddDays(7),
-        //        SigningCredentials = credenciais
-        //    };
-
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var token = tokenHandler.CreateToken(tokenDecriptor);
-        //    return tokenHandler.WriteToken(token);
-        //}
-
-        //public string CreateToken2(User user)
-        //{
-        //    var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-        //    var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
-
-
-        //    var permissoesString = string.Join(",", permissoesUsuario.Permissoes);
-        //    var tokenDescriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(new[]
-        //        {
-        //            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        //            new Claim("perfil", permissoesUsuario.Perfil.Descrição),
-        //            new Claim("permissoes", permissoesString),  // A lista de permissões em string
-        //            new Claim("nomeUsuario", permissoesUsuario.Nome),
-        //            new Claim("descricaoPerfil", permissoesUsuario.Perfil.Nome)
-
-        //        }),
-
-        //        Expires = DateTime.UtcNow.AddHours(4),
-        //        SigningCredentials = credenciais
-        //    };
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-
-
-        //    var token = tokenHandler.CreateToken(tokenDescriptor);
-        //    return tokenHandler.WriteToken(token);
-
-        //}
-
-
-        public string CreateToken2(User user)
+        public string CreateToken(UserEntity user)
         {
             var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var permissoesUsuario = _clienteRepository.SearchInfosToken(user.Id);
@@ -89,15 +34,15 @@ namespace Service.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("nomeUsuario", permissoesUsuario.Nome),
-                new Claim("perfil", permissoesUsuario.Perfil.Name),
+                new Claim("nomeUsuario", permissoesUsuario.Name),
+                new Claim("perfil", permissoesUsuario.Profile.Name),
                 
             };
 
             // Iterando sobre cada permissão e adicionando como claim individual
-            if (permissoesUsuario.Permissoes != null)
+            if (permissoesUsuario.Permissions != null)
             {
-                foreach (var permissao in permissoesUsuario.Permissoes)
+                foreach (var permissao in permissoesUsuario.Permissions)
                 {
                     claims.Add(new Claim("permissao", permissao.Name)); // Ajuste a propriedade conforme necessário
                 }
@@ -116,45 +61,13 @@ namespace Service.Services
         }
 
 
-        //public string CreateToken2(User user, string storeId, string userEmail)
-        //{
-        //    var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-
-        //    // Recupera as permissões do usuário
-        //    var permissoesUsuario = _clienteRepository.BuscarPermissoesUsuario(user.Id);
-
-        //    var tokenDescriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(new[]
-        //        {
-        //            new Claim(JwtRegisteredClaimNames.Email, user.Email)
-        //           // new Claim("perfil", ),  // Claim para perfil de permissões
-        //           // Claims adicionais
-        //           // new Claim("store", storeId),  // Claim personalizada para "store"
-        //           // new Claim("email", userEmail),  // Claim personalizada para "email"
-                    
-        //        }),
-
-        //        Expires = DateTime.UtcNow.AddHours(4),
-        //        SigningCredentials = credenciais
-        //    };
-
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        //    return tokenHandler.WriteToken(token);
-        //}
-
-
-
-
         public string Sign(string email, string senha)
         {
             string token = null;
             var user = _clienteRepository.ValidateUser(email, senha);
             if (user.Email != null)
             {
-                token = CreateToken2(user);
+                token = CreateToken(user);
 
             }
 
@@ -190,7 +103,5 @@ namespace Service.Services
             }
         }
     }
-
-
 }
 

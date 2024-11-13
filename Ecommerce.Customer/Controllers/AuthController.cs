@@ -21,7 +21,7 @@ namespace Ecommerce.Customer.Controllers
         //[AllowAnonymous]
         [HttpPost("Sign")]
        // [Authorize]
-        public ActionResult<APIResponse<string>> Sign([FromBody] User user)
+        public ActionResult<APIResponse<string>> Sign([FromBody] UserEntity user)
         {
 
             var token = _tokenService.Sign(user.Email, user.Password);

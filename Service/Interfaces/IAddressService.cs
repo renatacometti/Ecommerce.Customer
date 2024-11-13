@@ -5,6 +5,6 @@ namespace Service.Interfaces
     public interface IAddressService
     {
         string RetornaErros();
-        Task<bool> RegisterNewAddressForUser(Address endereco);
+        Task<bool> RegisterNewAddressForUser(AddressEntity endereco);
     }
 }

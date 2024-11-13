@@ -73,7 +73,7 @@ namespace Ecommerce.Customer.Controllers
 
         [HttpPost]
         [Route("Created/{password}")]
-        public async Task<IActionResult> Created([FromBody] User user, [FromRoute] string password)
+        public async Task<IActionResult> Created([FromBody] UserEntity user, [FromRoute] string password)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace Ecommerce.Customer.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] User user)
+        public async Task<IActionResult> Update([FromBody] UserEntity user)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace Ecommerce.Customer.Controllers
         {
             try
             {
-                var response = this._userService.BuscarEnderecoUsuario(postalCode, cpf);
+                var response = this._userService.SearchUserAddress(postalCode, cpf);
                 return Ok(response);
 
             }

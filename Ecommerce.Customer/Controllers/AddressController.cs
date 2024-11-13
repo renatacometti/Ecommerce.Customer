@@ -16,7 +16,7 @@ namespace Ecommerce.Customer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterNewAddressForUser([FromBody] Address endereco)
+        public async Task<IActionResult> RegisterNewAddressForUser([FromBody] AddressEntity endereco)
         {
             try
             {

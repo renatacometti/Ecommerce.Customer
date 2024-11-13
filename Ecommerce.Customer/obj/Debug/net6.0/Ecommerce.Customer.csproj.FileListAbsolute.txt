@@ -196,7 +196,6 @@ C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.AssemblyInfoInputs.cache
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.AssemblyInfo.cs
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.csproj.CoreCompileInputs.cache
-C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.MvcApplicationPartsAssemblyInfo.cs
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.MvcApplicationPartsAssemblyInfo.cache
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.RazorAssemblyInfo.cache
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.RazorAssemblyInfo.cs
@@ -214,3 +213,4 @@ C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.pdb
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.genruntimeconfig.cache
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\ref\Ecommerce.Customer.dll
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.MvcApplicationPartsAssemblyInfo.cs

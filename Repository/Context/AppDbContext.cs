@@ -6,32 +6,29 @@ namespace Repository.Context
 {
     public class AppDbContext: DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-       : base(options)
-        {
+        public AppDbContext(DbContextOptions<AppDbContext> options): base(options){}
 
-        }
-        public virtual DbSet<Domain.Entities.User> Usuario { get; set; }
-        public virtual DbSet<Domain.Entities.Address> Endereco { get; set; }
-        public virtual DbSet<Domain.Entities.Profile> Perfil { get; set; }
-        public virtual DbSet<Domain.Entities.Permission> Permissao { get; set; }
-        public virtual DbSet<Domain.Entities.PermissionProfile> Perfil_Permissao { get; set; }
+        public virtual DbSet<Domain.Entities.UserEntity> User { get; set; }
+        public virtual DbSet<Domain.Entities.AddressEntity> Address { get; set; }
+        public virtual DbSet<Domain.Entities.ProfileEntity> Profile { get; set; }
+        public virtual DbSet<Domain.Entities.PermissionEntity> Permission { get; set; }
+        public virtual DbSet<Domain.Entities.PermissionProfileEntity> Profile_Permission { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<PermissionProfile>().ToTable("Perfil_Permissao");
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<PermissionProfile>().ToTable("Perfil_Permissao");
 
-            modelBuilder.Entity<PermissionProfile>()
-                .HasOne(p => p.Profile)
-                .WithMany(e => e.PermissionProfile)
-                .HasForeignKey(p => p.ProfileId);
+        //    modelBuilder.Entity<PermissionProfile>()
+        //        .HasOne(p => p.Profile)
+        //        .WithMany(e => e.PermissionProfile)
+        //        .HasForeignKey(p => p.ProfileId);
 
-            modelBuilder.Entity<PermissionProfile>()
-                .HasOne(pe => pe.Permission)
-                .WithMany(pp => pp.PermissionProfile)
-                .HasForeignKey(pe => pe.PermissionId);
+        //    modelBuilder.Entity<PermissionProfile>()
+        //        .HasOne(pe => pe.Permission)
+        //        .WithMany(pp => pp.PermissionProfile)
+        //        .HasForeignKey(pe => pe.PermissionId);
 
 
-        }
+        //}
     }
 }
