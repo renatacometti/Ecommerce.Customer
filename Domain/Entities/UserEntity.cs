@@ -12,7 +12,8 @@ namespace Domain.Entities
         public string Password { get; set; }
         public string Active { get; set; }
         public virtual ICollection<AddressEntity> Addresses { get; set; }
-        public int Id_Profile { get; set; }
+
+        public int ProfileId { get; set; }
         public virtual ProfileEntity Profiles { get; set; }
     }
 }

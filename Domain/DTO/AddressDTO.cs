@@ -1,6 +1,6 @@
 ﻿namespace Domain.DTO
 {
-    public struct AddressDTO
+    public class AddressDTO
     {
         public int Id { get; set; }
         public string Street { get; set; }

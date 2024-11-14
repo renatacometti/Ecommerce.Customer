@@ -49,6 +49,13 @@ namespace Repository.EntityConfig
             builder.Property(e => e.UserId)
               .HasColumnName("Id_Profile")
               .IsRequired();
+            
+            builder
+              .HasOne(f => f.Users)
+              .WithMany(p => p.Addresses)
+              .HasForeignKey(f => f.UserId)
+              .HasPrincipalKey(p => p.Id);
+
         }
     }
 }

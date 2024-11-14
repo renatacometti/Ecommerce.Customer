@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,11 @@ namespace Ecommerce.Customer.Controllers
         //[AllowAnonymous]
         [HttpPost("Sign")]
        // [Authorize]
-        public ActionResult<APIResponse<string>> Sign([FromBody] UserEntity user)
+        public ActionResult<APIResponse<string>> Sign([FromBody] UserDTO user)
         {
 
-            var token = _tokenService.Sign(user.Email, user.Password);
-           // return Ok(token);
+            var token = _tokenService.Sign(user);
+
            if (token == null) 
            {
                 return Unauthorized(new APIResponse<string>

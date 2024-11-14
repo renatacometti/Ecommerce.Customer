@@ -14,6 +14,7 @@ namespace Service.Mapping
 
             CreateMap<UserDTO, UserVM>().ReverseMap();
             CreateMap<UserDTO, UserEntity>().ReverseMap();
+            CreateMap<AddressDTO, AddressEntity>().ReverseMap();
             CreateMap<PermissionDTO, PermissionEntity>().ReverseMap();
             CreateMap<AddressVM, AddressEntity>().ReverseMap();
 

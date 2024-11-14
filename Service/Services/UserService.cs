@@ -107,11 +107,12 @@ namespace Service.Services
             }
 
         }
-        public async Task<bool> Created(UserEntity user, string password)
+        public async Task<bool> Created(UserDTO user, string password)
         {
 
             try
             {
+                var model = _mapper.Map<UserEntity>(user);
                 if (user == null)
                 {
                     ErrosValidacao = "por favor informe um usuário para ser cadastrado";
@@ -134,8 +135,8 @@ namespace Service.Services
                     return false;
 
 
-                var returnedUser = _userRepository.Create(user);
-                _userRepository.SendEmail(user);
+                var returnedUser = _userRepository.Create(model);
+                _userRepository.SendEmail(model);
                 return true;
 
             }

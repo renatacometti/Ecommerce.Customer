@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -73,7 +74,7 @@ namespace Ecommerce.Customer.Controllers
 
         [HttpPost]
         [Route("Created/{password}")]
-        public async Task<IActionResult> Created([FromBody] UserEntity user, [FromRoute] string password)
+        public async Task<IActionResult> Created([FromBody] UserDTO user, [FromRoute] string password)
         {
             try
             {

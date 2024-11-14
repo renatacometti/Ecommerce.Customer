@@ -6,10 +6,10 @@ namespace Service.Interfaces
 {
     public interface IUserService
     {
-        IEnumerable<UserVM> GetAll(int page, int rows, string colunaOrdenacao, string direcaoOrdenacao);
+        IEnumerable<UserVM> GetAll(int page, int rows, string SortColumn, string SortDirection);
         bool ValidatePassword(string password, string validatePassword);
         bool validateEmail(string email);
-        Task<bool> Created(UserEntity user, string password);
+        Task<bool> Created(UserDTO user, string password);
         Task<bool> Update(UserEntity user);
         string RetornaErros();
         UserVM GetById(int id);

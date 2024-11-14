@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Repository;
+﻿using Domain.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Repository.Repository;
 using Service.Interfaces;
@@ -19,8 +18,6 @@ namespace Infraestrutura
 
         private static void ConfigureRepository(IServiceCollection services)
         {
-
-            //services.AddScoped<ICommonRepository<User>, UserRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();

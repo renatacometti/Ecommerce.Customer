@@ -46,9 +46,15 @@ namespace Repository.EntityConfig
             builder.Property(e => e.Update_Date)
             .HasColumnName("Update_Date");
 
-            builder.Property(e => e.Id_Profile)
+            builder.Property(e => e.ProfileId)
             .HasColumnName("Id_Profile")
             .IsRequired();
+
+            builder
+            .HasOne(f => f.Profiles)
+            .WithMany(p => p.Users)
+            .HasForeignKey(f => f.ProfileId)
+            .HasPrincipalKey(p => p.Id);
         }
     }
 }

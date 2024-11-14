@@ -44,8 +44,8 @@ namespace Repository.Repository
             //return user;
 
             var userDTO = (from user in _context.User
-                           join p in _context.Profile on user.Id_Profile equals p.Id
-                           join pp1 in _context.Profile_Permission on p.Id equals pp1.ProfileId
+                           join p in _context.Profile on user.ProfileId equals p.Id
+                           join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
                            join per in _context.Permission on pp1.PermissionId equals per.Id
                            where user.Id == userId
                            select new UserDTO
@@ -59,7 +59,7 @@ namespace Repository.Repository
                                    Name = p.Name
                                },
                                Permissions = (from perm in _context.Permission
-                                             join pp in _context.Profile_Permission on perm.Id equals pp.PermissionId
+                                             join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId
                                              where pp.ProfileId == p.Id
                                              select new PermissionDTO
                                              {

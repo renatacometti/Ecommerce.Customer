@@ -1,6 +1,5 @@
 ﻿using Domain.Common;
 
-
 namespace Domain.Entities
 {
     public class AddressEntity: BaseEntity 
@@ -14,8 +13,6 @@ namespace Domain.Entities
         public string AddressName { get; set; }
         public int UserId { get; set; }
         public virtual UserEntity Users { get; set; }
-     
-
     }
     
 }

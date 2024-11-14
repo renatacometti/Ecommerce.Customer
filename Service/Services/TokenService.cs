@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Domain.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -61,13 +62,13 @@ namespace Service.Services
         }
 
 
-        public string Sign(string email, string senha)
+        public string Sign(UserDTO user)
         {
             string token = null;
-            var user = _clienteRepository.ValidateUser(email, senha);
+            var existingUser = _clienteRepository.ValidateUser(user.Email, user.Password);
             if (user.Email != null)
             {
-                token = CreateToken(user);
+                token = CreateToken(existingUser);
 
             }
 

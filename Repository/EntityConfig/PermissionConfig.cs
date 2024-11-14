@@ -29,7 +29,6 @@ namespace Repository.EntityConfig
 
             builder.Property(e => e.Update_Date)
             .HasColumnName("Update_Date");
-
         }
     }
 }

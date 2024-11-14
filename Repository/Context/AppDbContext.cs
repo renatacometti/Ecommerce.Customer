@@ -12,7 +12,7 @@ namespace Repository.Context
         public virtual DbSet<Domain.Entities.AddressEntity> Address { get; set; }
         public virtual DbSet<Domain.Entities.ProfileEntity> Profile { get; set; }
         public virtual DbSet<Domain.Entities.PermissionEntity> Permission { get; set; }
-        public virtual DbSet<Domain.Entities.PermissionProfileEntity> Profile_Permission { get; set; }
+        public virtual DbSet<Domain.Entities.ProfilePermissionEntity> ProfilePermission { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

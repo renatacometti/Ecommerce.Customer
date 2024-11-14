@@ -6,6 +6,6 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Active { get; set; }
-        public virtual ICollection<PermissionProfileEntity> PermissionProfiles { get; set; }
+        public virtual ICollection<ProfilePermissionEntity> ProfilePermissions { get; set; }
     }
 }
