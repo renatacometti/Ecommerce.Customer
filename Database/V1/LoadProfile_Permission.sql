@@ -1,8 +1,8 @@
 /****** Script do comando SelectTopNRows de SSMS  ******/
-insert into [dbo].[Profile_Permission]([Id_Profile], [Id_Permission])
+insert into [dbo].[ProfilePermission]([ProfileiD], [PermissionId], CreateDate, UpdateDate)
 values
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5);
+(1, 1, GetDate(), null),
+(1, 2, GetDate(), null),
+(1, 3, GetDate(), null),
+(1, 4, GetDate(), null),
+(1, 5, GetdATE(), NULL);

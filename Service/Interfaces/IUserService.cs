@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.DTOs.User;
 using Domain.Entities;
 using Service.ViewModel;
 
@@ -9,7 +9,7 @@ namespace Service.Interfaces
         IEnumerable<UserVM> GetAll(int page, int rows, string SortColumn, string SortDirection);
         bool ValidatePassword(string password, string validatePassword);
         bool validateEmail(string email);
-        Task<bool> Created(UserDTO user, string password);
+        Task<bool> Created(CreateUserDTO user, string password);
         Task<bool> Update(UserEntity user);
         string RetornaErros();
         UserVM GetById(int id);

@@ -1,4 +1,4 @@
-﻿namespace Domain.DTO
+﻿namespace Domain.DTOs.Address
 {
     public class AddressDTO
     {
@@ -11,5 +11,6 @@
         public string PostalCode { get; set; }
         public string AddressName { get; set; }
         public int UserId { get; set; }
+
     }
 }

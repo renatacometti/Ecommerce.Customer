@@ -8,7 +8,7 @@ namespace Repository.EntityConfig
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("Users");
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Name)
@@ -19,8 +19,8 @@ namespace Repository.EntityConfig
            .HasColumnName("Cpf")
            .IsRequired();
 
-            builder.Property(e => e.DateBirth)
-           .HasColumnName("Date_Birth")
+            builder.Property(e => e.Birthday)
+           .HasColumnName("Birthday")
            .IsRequired();
 
             builder.Property(e => e.Phone)
@@ -39,19 +39,19 @@ namespace Repository.EntityConfig
            .HasColumnName("Active")
            .IsRequired();
 
-            builder.Property(e => e.Create_Date)
-           .HasColumnName("Create_Date")
+            builder.Property(e => e.CreateDate)
+           .HasColumnName("CreateDate")
            .IsRequired();
 
-            builder.Property(e => e.Update_Date)
-            .HasColumnName("Update_Date");
+            builder.Property(e => e.UpdateDate)
+            .HasColumnName("UpdateDate");
 
             builder.Property(e => e.ProfileId)
-            .HasColumnName("Id_Profile")
+            .HasColumnName("ProfileId")
             .IsRequired();
 
             builder
-            .HasOne(f => f.Profiles)
+            .HasOne(f => f.Profile)
             .WithMany(p => p.Users)
             .HasForeignKey(f => f.ProfileId)
             .HasPrincipalKey(p => p.Id);

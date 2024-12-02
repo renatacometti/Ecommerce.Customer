@@ -1,4 +1,6 @@
-﻿using Domain.DTO;
+﻿using Domain.DTOs;
+using Domain.DTOs.Profile;
+using Domain.DTOs.User;
 using Domain.Entities;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,7 @@ namespace Repository.Repository
         public UserEntity ValidateUser(string email, string password)
         {
 
-            var user = _context.User.Where(c => c.Email == email && c.Password == password)
+            var user = _context.Users.Where(c => c.Email == email && c.Password == password)
                 .Select(user => new UserEntity() { Email = user.Email, Password = user.Password, Id = user.Id }).SingleOrDefault();
 
             return user;
@@ -43,9 +45,9 @@ namespace Repository.Repository
 
             //return user;
 
-            var userDTO = (from user in _context.User
+            var userDTO = (from user in _context.Users
                            join p in _context.Profile on user.ProfileId equals p.Id
-                           join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
+                           join pp1 in _context.ProfilePermission on p.Id equals pp1.Id_Profile
                            join per in _context.Permission on pp1.PermissionId equals per.Id
                            where user.Id == userId
                            select new UserDTO
@@ -53,14 +55,14 @@ namespace Repository.Repository
                                Id = user.Id,
                                Name = user.Name,
                                Email = user.Email,
-                               Profile = new ProfileEntity
+                               Profile = new ProfileDTO
                                {
                                    Id = p.Id,
                                    Name = p.Name
                                },
                                Permissions = (from perm in _context.Permission
                                              join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId
-                                             where pp.ProfileId == p.Id
+                                             where pp.Id_Profile == p.Id
                                              select new PermissionDTO
                                              {
                                                  Id = perm.Id,
@@ -74,7 +76,8 @@ namespace Repository.Repository
         }
         public bool UserExist(string cpf, string email)
         {
-            var userExist = _context.User.Where(c => c.Email == email || c.Cpf == cpf).FirstOrDefault();
+            var userExist = _context.Users.Where(u => u.Email == email || u.Cpf == cpf).FirstOrDefault();
+            
             if (userExist != null)
                 return true;
 
@@ -83,7 +86,7 @@ namespace Repository.Repository
 
         public UserEntity SearchUserByCpf(string cpf)
         {
-            var user = _context.User.Where(c => c.Cpf == cpf).FirstOrDefault();
+            var user = _context.Users.Where(c => c.Cpf == cpf).FirstOrDefault();
             return user;
 
         }
@@ -91,7 +94,7 @@ namespace Repository.Repository
         public UserEntity GetByIDTest(int id)
         {
 
-            var user = _context.User.Where(c => c.Id == id).FirstOrDefault();
+            var user = _context.Users.Where(c => c.Id == id).FirstOrDefault();
             return user;
 
         }
@@ -99,7 +102,7 @@ namespace Repository.Repository
         public UserEntity GetByIDTestTwo(int id)
         {
 
-            var user = (from c in _context.User
+            var user = (from c in _context.Users
                         where c.Id == id
                         select c).FirstOrDefault();
             return user;
@@ -108,7 +111,7 @@ namespace Repository.Repository
 
         public AddressEntity SearchAddressByUser(string cep, string cpf)
         {
-            var returnedAddress = (from c in _context.User
+            var returnedAddress = (from c in _context.Users
                                      join e in _context.Address on c.Id equals e.UserId
                                      where c.Cpf == cpf && e.PostalCode == cep
                                      select e).FirstOrDefault();
@@ -201,7 +204,7 @@ namespace Repository.Repository
         public UserEntity SearchUserAndTheirRelationships(int idCliente)
         {
 
-            var cliente = _context.User.AsNoTracking()
+            var cliente = _context.Users.AsNoTracking()
                    .Include(p => p.Addresses)
                     .Where(c => c.Id == idCliente)
                                  .SingleOrDefault();
@@ -211,14 +214,14 @@ namespace Repository.Repository
 
         public void Change(UserEntity cliente)
         {
-            var buscaClienteERelacionamento = _context.User
+            var buscaClienteERelacionamento = _context.Users
              .Where(p => p.Id == cliente.Id)
              .Include(p => p.Addresses)
             .SingleOrDefault();
 
             if (buscaClienteERelacionamento != null)
             {
-                cliente.Update_Date = DateTime.Now;
+                cliente.UpdateDate = DateTime.Now;
                 _context.Entry(buscaClienteERelacionamento).CurrentValues.SetValues(cliente);
             }
 
@@ -231,7 +234,7 @@ namespace Repository.Repository
 
                 if (existeEndereco != null)
                 {
-                    enderecoModel.Update_Date = DateTime.Now;
+                    enderecoModel.UpdateDate = DateTime.Now;
                     _context.Entry(existeEndereco).CurrentValues.SetValues(enderecoModel);
 
                 }
@@ -247,8 +250,8 @@ namespace Repository.Repository
                         State = enderecoModel.State,
                         PostalCode = enderecoModel.PostalCode,
                         AddressName = enderecoModel.AddressName,
-                        Create_Date = DateTime.Now,
-                        Update_Date = DateTime.Now,
+                        CreateDate = DateTime.Now,
+                        UpdateDate = DateTime.Now,
 
                     };
                     buscaClienteERelacionamento.Addresses.Add(novoEndereco);

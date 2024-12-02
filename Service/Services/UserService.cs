@@ -5,7 +5,8 @@ using Service.Interfaces;
 using Service.ViewModel;
 using System.Text.RegularExpressions;
 using System.Linq.Dynamic.Core;
-using Domain.DTO;
+using Domain.DTOs.User;
+using Repository.Repository;
 
 namespace Service.Services
 {
@@ -13,6 +14,7 @@ namespace Service.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IAddressRepository _addressRepository;
         private string ErrosValidacao { get; set; }
 
 
@@ -20,10 +22,11 @@ namespace Service.Services
         {
             return ErrosValidacao;
         }
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IAddressRepository addressRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _addressRepository = addressRepository;
 
         }
 
@@ -107,18 +110,16 @@ namespace Service.Services
             }
 
         }
-        public async Task<bool> Created(UserDTO user, string password)
+        public async Task<bool> Created(CreateUserDTO user, string password)
         {
-
             try
             {
-                var model = _mapper.Map<UserEntity>(user);
+                var userEntity = _mapper.Map<UserEntity>(user);
                 if (user == null)
                 {
                     ErrosValidacao = "por favor informe um usuário para ser cadastrado";
                     return false;
                 }
-
 
                 var validarUsuario = _userRepository.UserExist(user.Cpf, user.Email);
                 if (validarUsuario)
@@ -127,7 +128,6 @@ namespace Service.Services
                     return false;
                 }
 
-
                 if (!ValidatePassword(user.Password, password))
                     return false;
 
@@ -135,16 +135,37 @@ namespace Service.Services
                     return false;
 
 
-                var returnedUser = _userRepository.Create(model);
-                _userRepository.SendEmail(model);
-                return true;
+                _userRepository.BeginTransaction();
+                var createduser = new UserEntity();
+                createduser.Password = password;
+                createduser.Email = user.Email;
+                createduser.Name = user.Name;
+                createduser.Cpf = user.Cpf;
+                createduser.Birthday = user.Birthday;
+                createduser.ProfileId = user.ProfileId;
+                createduser.Active = user.Active;
+                createduser.Phone = user.Phone;
 
+                var createdUser = await _userRepository.Create(createduser);
+                if (createdUser != null) 
+                {
+                    foreach (var address in userEntity.Addresses)
+                    {
+                        address.UserId = createdUser.Id;
+                        var createdAddress = await _addressRepository.Create(address);
+                    }
+                }
+               
+                this._userRepository.CommitTransaction();
+                _userRepository.SendEmail(userEntity);
             }
             catch (Exception ex)
             {
+                
                 _userRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
+            return true;
 
         }
 

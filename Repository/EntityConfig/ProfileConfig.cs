@@ -23,12 +23,12 @@ namespace Repository.EntityConfig
            .HasColumnName("Active")
            .IsRequired();
 
-            builder.Property(e => e.Create_Date)
-           .HasColumnName("Create_Date")
+            builder.Property(e => e.CreateDate)
+           .HasColumnName("CreateDate")
            .IsRequired();
 
-            builder.Property(e => e.Update_Date)
-            .HasColumnName("Update_Date");
+            builder.Property(e => e.UpdateDate)
+            .HasColumnName("UpdateDate");
         }
     }
 }

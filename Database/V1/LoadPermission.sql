@@ -1,6 +1,6 @@
 /****** Script do comando SelectTopNRows de SSMS  ******/
 
-insert into [dbo].[Permission]([name], [Description], [Active], [Create_Date], [Update_Date])
+insert into [dbo].[Permission]([name], [Description], [Active], [CreateDate], [UpdateDate])
 values
 ('listar_perfil', 'Listar Perfil', 1, GetDate(), null),
 ('salvar_perfil', 'Salvar Perfil', 1, GetDate(), null),

@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.DTOs.User;
 using Domain.Entities;
 using Domain.Repository;
 using Microsoft.Extensions.Configuration;

@@ -1,5 +1,4 @@
-﻿using Domain.DTO;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Service.ViewModel
 {

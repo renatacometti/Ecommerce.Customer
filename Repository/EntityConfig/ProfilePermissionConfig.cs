@@ -11,7 +11,7 @@ namespace Repository.EntityConfig
             builder.ToTable("Profile_Permission");
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.ProfileId)
+            builder.Property(e => e.Id_Profile)
             .HasColumnName("Id_Profile")
             .IsRequired();
 
@@ -22,7 +22,7 @@ namespace Repository.EntityConfig
             builder
             .HasOne(f => f.Profiles)
             .WithMany(p => p.ProfilePermissions)
-            .HasForeignKey(f => f.ProfileId)
+            .HasForeignKey(f => f.Id_Profile)
             .HasPrincipalKey(p => p.Id);
 
             builder

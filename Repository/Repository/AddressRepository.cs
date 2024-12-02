@@ -16,8 +16,8 @@ namespace Repository.Repository
 
         public void Add(AddressEntity address)
         {
-            address.Create_Date = DateTime.Now;
-            address.Update_Date = DateTime.Now;
+            address.CreateDate = DateTime.Now;
+            address.UpdateDate = DateTime.Now;
             _context.Address.Add(address);
         }
         public async Task<bool> SaveAllAsync()

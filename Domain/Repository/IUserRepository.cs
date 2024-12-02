@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.DTOs.User;
 using Domain.Entities;
 
 namespace Domain.Repository

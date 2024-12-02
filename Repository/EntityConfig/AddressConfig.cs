@@ -16,42 +16,42 @@ namespace Repository.EntityConfig
            .IsRequired();
 
             builder.Property(e => e.Number)
-           .HasColumnName("Cpf")
+           .HasColumnName("Number")
            .IsRequired();
 
             builder.Property(e => e.District)
-           .HasColumnName("Date_Birth")
+           .HasColumnName("District")
            .IsRequired();
 
             builder.Property(e => e.City)
-           .HasColumnName("Phone")
+           .HasColumnName("City")
            .IsRequired();
 
             builder.Property(e => e.State)
-           .HasColumnName("Email")
+           .HasColumnName("State")
            .IsRequired();
 
             builder.Property(e => e.PostalCode)
-           .HasColumnName("Password")
+           .HasColumnName("PostalCode")
            .IsRequired();
 
             builder.Property(e => e.AddressName)
-           .HasColumnName("Active")
+           .HasColumnName("AddressName")
            .IsRequired();
 
-            builder.Property(e => e.Create_Date)
-           .HasColumnName("Create_Date")
+            builder.Property(e => e.CreateDate)
+           .HasColumnName("CreateDate")
            .IsRequired();
 
-            builder.Property(e => e.Update_Date)
-            .HasColumnName("Update_Date");
+            builder.Property(e => e.UpdateDate)
+            .HasColumnName("UpdateDate");
 
             builder.Property(e => e.UserId)
-              .HasColumnName("Id_Profile")
+              .HasColumnName("UserId")
               .IsRequired();
             
             builder
-              .HasOne(f => f.Users)
+              .HasOne(f => f.User)
               .WithMany(p => p.Addresses)
               .HasForeignKey(f => f.UserId)
               .HasPrincipalKey(p => p.Id);
