@@ -8,21 +8,21 @@ namespace Repository.EntityConfig
     {
         public void Configure(EntityTypeBuilder<ProfilePermissionEntity> builder)
         {
-            builder.ToTable("Profile_Permission");
+            builder.ToTable("ProfilePermission");
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.Id_Profile)
-            .HasColumnName("Id_Profile")
+            builder.Property(e => e.ProfileId)
+            .HasColumnName("ProfileId")
             .IsRequired();
 
             builder.Property(e => e.PermissionId)
-            .HasColumnName("Id_Permission")
+            .HasColumnName("PermissionId")
             .IsRequired();
 
             builder
             .HasOne(f => f.Profiles)
             .WithMany(p => p.ProfilePermissions)
-            .HasForeignKey(f => f.Id_Profile)
+            .HasForeignKey(f => f.ProfileId)
             .HasPrincipalKey(p => p.Id);
 
             builder

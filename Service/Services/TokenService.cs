@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Dynamic.Core.Tokenizer;
 using System.Security.Claims;
 using System.Text;
 
@@ -30,35 +31,42 @@ namespace Service.Services
         {
             var credenciais = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var permissoesUsuario = _clienteRepository.SearchInfosToken(user.Id);
-
-            // Inicializando a lista de claims
-            var claims = new List<Claim>
+            if (permissoesUsuario != null)
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("nomeUsuario", permissoesUsuario.Name),
-                new Claim("perfil", permissoesUsuario.Profile.Name),
-                
-            };
-
-            // Iterando sobre cada permissão e adicionando como claim individual
-            if (permissoesUsuario.Permissions != null)
-            {
-                foreach (var permissao in permissoesUsuario.Permissions)
+                // Inicializando a lista de claims
+                var claims = new List<Claim>
                 {
-                    claims.Add(new Claim("permissao", permissao.Name)); // Ajuste a propriedade conforme necessário
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim("nomeUsuario", permissoesUsuario.Name),
+                    new Claim("perfil", permissoesUsuario.Profile.Name),
+
+                };
+
+                // Iterando sobre cada permissão e adicionando como claim individual
+                if (permissoesUsuario.Permissions != null)
+                {
+                    foreach (var permissao in permissoesUsuario.Permissions)
+                    {
+                        claims.Add(new Claim("permissao", permissao.Name)); // Ajuste a propriedade conforme necessário
+                    }
                 }
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.UtcNow.AddHours(4),
+                    SigningCredentials = credenciais
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
             }
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            else 
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(4),
-                SigningCredentials = credenciais
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+                throw new InvalidOperationException("Permissões do usuário não encontradas.");
+            }
+            
         }
 
 

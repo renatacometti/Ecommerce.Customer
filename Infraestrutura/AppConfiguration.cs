@@ -12,6 +12,9 @@ namespace Infraestrutura
         public static void ConfigureApp(IServiceCollection services, Microsoft.Extensions.Configuration.IConfigurationRoot configuration)
         {
             ConfigureRepository(services);
+
+
+
             ConfigureService(services);
 
         }

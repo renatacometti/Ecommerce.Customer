@@ -157,7 +157,7 @@ namespace Service.Services
                 }
                
                 this._userRepository.CommitTransaction();
-                _userRepository.SendEmail(userEntity);
+                //_userRepository.SendEmail(userEntity);
             }
             catch (Exception ex)
             {

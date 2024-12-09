@@ -47,7 +47,7 @@ namespace Repository.Repository
 
             var userDTO = (from user in _context.Users
                            join p in _context.Profile on user.ProfileId equals p.Id
-                           join pp1 in _context.ProfilePermission on p.Id equals pp1.Id_Profile
+                           join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
                            join per in _context.Permission on pp1.PermissionId equals per.Id
                            where user.Id == userId
                            select new UserDTO
@@ -62,7 +62,7 @@ namespace Repository.Repository
                                },
                                Permissions = (from perm in _context.Permission
                                              join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId
-                                             where pp.Id_Profile == p.Id
+                                             where pp.ProfileId == p.Id
                                              select new PermissionDTO
                                              {
                                                  Id = perm.Id,
@@ -121,47 +121,89 @@ namespace Repository.Repository
 
         public void SendEmail(UserEntity cliente)
         {
-
-            CultureInfo cult = new CultureInfo("pt-BR");
-
-            SmtpClient client = new SmtpClient();
-            client.Host = _configuration["Email:Host"];
-            client.Port = int.Parse(_configuration["Email:Port"]);
-            client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(_configuration["Email:SenderEmail"], _configuration["Email:SenderPassword"]);
-
-
-            MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
-            string emailpara = cliente.Email;
-            MailAddress para = new MailAddress(emailpara); //email que peguei no site email 10 mint
-            MailMessage email = new MailMessage(de, para);
-
-            email.IsBodyHtml = true;
-            email.Subject = "Seja bem vindo " + cliente.Name; // titulo do email
-
-            var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
-            using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+            using (SmtpClient client = new SmtpClient())
             {
-                var strMail = objReader.ReadToEnd();
+                client.Host = _configuration["Email:Host"];
+                client.Port = int.Parse(_configuration["Email:Port"]);
+                client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(
+                    _configuration["Email:SenderEmail"],
+                    _configuration["Email:SenderPassword"]);
+
+                MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
+                MailAddress para = new MailAddress(cliente.Email);
+                using (MailMessage email = new MailMessage(de, para))
+                {
+                    email.IsBodyHtml = true;
+                    email.Subject = "Seja bem vindo " + cliente.Name;
+                    email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
 
-                strMail = strMail.Replace("[Nome]", cliente.Name);
-                strMail = strMail.Replace("[Email]", cliente.Email);
-                strMail = strMail.Replace("[Senha]", cliente.Password);
+                    var caminho = Path.Combine(Environment.CurrentDirectory, _configuration["TemplatePath"], "EmailBoasVindas.cshtml");
+                   
 
-                email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-                email.Body = strMail;
+                    using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+                    {
+                        string strMail = objReader.ReadToEnd();
+                        strMail = strMail.Replace("[Nome]", cliente.Name)
+                                         .Replace("[Email]", cliente.Email)
+                                         .Replace("[Senha]", cliente.Password);
 
+                        email.Body = strMail;
+                    }
+
+                    try
+                    {
+                        client.Send(email);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Erro ao enviar e-mail: {ex.Message}. Host: {client.Host}, Porta: {client.Port}, E-mail: {_configuration["Email:SenderEmail"]}");
+                    }
+                }
             }
-            try
-            {
-                client.Send(email);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message + client.Port + client.Host + _configuration["Email:SenderEmail"] + _configuration["Email:SenderPassword"]);
-            }
+
+            //CultureInfo cult = new CultureInfo("pt-BR");
+
+            //SmtpClient client = new SmtpClient();
+            //client.Host = _configuration["Email:Host"];
+            //client.Port = int.Parse(_configuration["Email:Port"]);
+            //client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
+            //client.UseDefaultCredentials = false;
+            //client.Credentials = new NetworkCredential(_configuration["Email:SenderEmail"], _configuration["Email:SenderPassword"]);
+
+
+            //MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
+            //string emailpara = cliente.Email;
+            //MailAddress para = new MailAddress(emailpara); //email que peguei no site email 10 mint
+            //MailMessage email = new MailMessage(de, para);
+
+            //email.IsBodyHtml = true;
+            //email.Subject = "Seja bem vindo " + cliente.Name; // titulo do email
+
+            //var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
+            //using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+            //{
+            //    var strMail = objReader.ReadToEnd();
+
+
+            //    strMail = strMail.Replace("[Nome]", cliente.Name);
+            //    strMail = strMail.Replace("[Email]", cliente.Email);
+            //    strMail = strMail.Replace("[Senha]", cliente.Password);
+
+            //    email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+            //    email.Body = strMail;
+
+            //}
+            //try
+            //{
+            //    client.Send(email);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception(ex.Message + client.Port + client.Host + _configuration["Email:SenderEmail"] + _configuration["Email:SenderPassword"]);
+            //}
 
             //CultureInfo cult = new CultureInfo("pt-BR");
             //MailMessage mailMessage = new MailMessage();

@@ -5,7 +5,7 @@ namespace Domain.Entities
     {
         public int Id {  get; set; }
 
-        public int Id_Profile { get; set; }
+        public int ProfileId { get; set; }
         public virtual ProfileEntity Profiles { get; set; }
 
         public int PermissionId { get; set; }
