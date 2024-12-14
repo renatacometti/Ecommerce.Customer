@@ -1,10 +1,6 @@
 ﻿using Domain.Common;
 using Repository.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Repository.Repository
 {
@@ -19,13 +15,16 @@ namespace Repository.Repository
 
             if (value != null)
             {
-                value.Create_Date = DateTime.Now;
-                value.Update_Date = DateTime.Now;
+                value.CreateDate = DateTime.Now;
                 var responseAdd = await _context.Set<T>().AddAsync(value);
 
                 await _context.SaveChangesAsync();
 
                 response = responseAdd.Entity;
+            }
+            else
+            {
+                throw new ArgumentNullException("value");
             }
 
             return response;
@@ -41,7 +40,7 @@ namespace Repository.Repository
             {
                 foreach (var item in value)
                 {
-                    item.Create_Date = DateTime.Now;
+                    item.CreateDate = DateTime.Now;
                     var responseAdd = await _context.Set<T>().AddAsync(item);
                     response.Add(responseAdd.Entity);
                 }

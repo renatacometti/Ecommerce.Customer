@@ -1,20 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Repository.Context
 {
     public class AppDbContext: DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-       : base(options)
-        {
+        public AppDbContext(DbContextOptions<AppDbContext> options): base(options){}
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("dbo");
+
+            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+
+            base.OnModelCreating(modelBuilder);
         }
-        public virtual DbSet<Domain.Entities.Cliente> Cliente { get; set; }
-        public virtual DbSet<Domain.Entities.Endereco> Endereco { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
+        public virtual DbSet<Domain.Entities.UserEntity> Users { get; set; }
+        public virtual DbSet<Domain.Entities.AddressEntity> Address { get; set; }
+        public virtual DbSet<Domain.Entities.ProfileEntity> Profile { get; set; }
+        public virtual DbSet<Domain.Entities.PermissionEntity> Permission { get; set; }
+        public virtual DbSet<Domain.Entities.ProfilePermissionEntity> ProfilePermission { get; set; }
+
+      
     }
 }

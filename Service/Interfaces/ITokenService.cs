@@ -1,18 +1,12 @@
-﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.DTOs.User;
+using Domain.Entities;
 
 namespace Service.Interfaces
 {
     public interface ITokenService
     {
-        //string CreateToken(User user);
         bool ValidateToken(string token);
-        string CreateToken2(User user);
-
-        String Sign(string email, string senha);
+        string CreateToken(UserEntity user);
+        String Sign(UserDTO user);
     }
 }

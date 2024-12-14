@@ -1,27 +1,27 @@
-﻿using AutoMapper;
-using Domain.DTO;
+﻿using Domain.DTOs;
+using Domain.DTOs.Address;
+using Domain.DTOs.Profile;
+using Domain.DTOs.User;
 using Domain.Entities;
 using Service.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Service.Mapping
 {
-    public class AutoMapperConfig: Profile
+    public class AutoMapperConfig: AutoMapper.Profile
     {
         public AutoMapperConfig()
         {
             AllowNullCollections = true;
             AllowNullDestinationValues = true;
-
-            CreateMap<ClienteDTO, ClienteVM>().ReverseMap();
-            CreateMap<ClienteDTO, Cliente>().ReverseMap();
-            CreateMap<ClienteVM, Cliente>().ReverseMap();
-            CreateMap<EnderecoVM, Endereco>().ReverseMap();
-          
+            
+            CreateMap<UserDTO, UserVM>().ReverseMap();
+            CreateMap<UserDTO, UserEntity>().ReverseMap();
+            CreateMap<AddressDTO, AddressEntity>().ReverseMap();
+            CreateMap<ProfileDTO, ProfileEntity>().ReverseMap();
+            CreateMap<PermissionDTO, PermissionEntity>().ReverseMap();
+            CreateMap<AddressVM, AddressEntity>().ReverseMap();
+            CreateMap<CreateUserDTO, UserEntity>().ReverseMap();
 
         }
     }
