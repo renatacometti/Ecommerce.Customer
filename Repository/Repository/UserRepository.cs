@@ -35,20 +35,37 @@ namespace Repository.Repository
         public UserDTO SearchInfosToken(int userId)
         {
 
-            //var user = (from u in _context.Usuario
-            //            join p in _context.Perfil on u.Id_Perfil equals p.Id
-            //            join pp in _context.Perfil_Permissao on p.Id equals pp.Id_Perfil
-            //            join per in _context.Permissao on pp.Id_Permissao equals per.Id
-            //            where u.Id == idUsuario)
-            //             .Select(user => new UsuarioDTO() { Cpf = user.cpf, Senha = user.Senha, Id = user.Id }).SingleOrDefault();
-
-
-            //return user;
+            //var userDTO = (from user in _context.Users
+            //               join p in _context.Profile on user.ProfileId equals p.Id
+            //               join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
+            //               join per in _context.Permission on pp1.PermissionId equals per.Id
+            //               where user.Id == userId
+            //               select new UserDTO
+            //               {
+            //                   Id = user.Id,
+            //                   Name = user.Name,
+            //                   Email = user.Email,
+            //                   Profile = new ProfileDTO
+            //                   {
+            //                       Id = p.Id,
+            //                       Name = p.Name
+            //                   },
+            //                   Permissions = (from perm in _context.Permission
+            //                                  join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId
+            //                                  where pp.ProfileId == p.Id
+            //                                  select new PermissionDTO
+            //                                  {
+            //                                      Id = perm.Id,
+            //                                      Name = perm.Name
+            //                                  }).ToList()
+            //               }).FirstOrDefault();
 
             var userDTO = (from user in _context.Users
                            join p in _context.Profile on user.ProfileId equals p.Id
-                           join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
-                           join per in _context.Permission on pp1.PermissionId equals per.Id
+                           join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId into profilePermissionGroup
+                           from pp1 in profilePermissionGroup.DefaultIfEmpty()
+                           join per in _context.Permission on pp1.PermissionId equals per.Id into permissionGroup
+                           from per in permissionGroup.DefaultIfEmpty()
                            where user.Id == userId
                            select new UserDTO
                            {
@@ -61,17 +78,17 @@ namespace Repository.Repository
                                    Name = p.Name
                                },
                                Permissions = (from perm in _context.Permission
-                                             join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId
-                                             where pp.ProfileId == p.Id
-                                             select new PermissionDTO
-                                             {
-                                                 Id = perm.Id,
-                                                 Name = perm.Name
-                                             }).ToList()
+                                              join pp in _context.ProfilePermission on perm.Id equals pp.PermissionId into ppGroup
+                                              from pp in ppGroup.DefaultIfEmpty()
+                                              where pp.ProfileId == p.Id || pp.ProfileId == null
+                                              select new PermissionDTO
+                                              {
+                                                  Id = perm != null ? perm.Id : 0,
+                                                  Name = perm != null ? perm.Name: "Usuario não possui Permissoes"
+                                              }).ToList()
                            }).FirstOrDefault();
 
-           return userDTO;
-
+            return userDTO;
 
         }
         public bool UserExist(string cpf, string email)

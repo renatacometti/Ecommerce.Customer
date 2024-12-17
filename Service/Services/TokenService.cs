@@ -43,7 +43,7 @@ namespace Service.Services
                 };
 
                 // Iterando sobre cada permissão e adicionando como claim individual
-                if (permissoesUsuario.Permissions != null)
+                if (permissoesUsuario.Permissions.Count > 0)
                 {
                     foreach (var permissao in permissoesUsuario.Permissions)
                     {
@@ -74,7 +74,7 @@ namespace Service.Services
         {
             string token = null;
             var existingUser = _clienteRepository.ValidateUser(user.Email, user.Password);
-            if (user.Email != null)
+            if (existingUser != null)
             {
                 token = CreateToken(existingUser);
 
