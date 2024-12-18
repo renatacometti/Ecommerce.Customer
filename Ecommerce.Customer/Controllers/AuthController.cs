@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs.User;
-using Domain.Entities;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

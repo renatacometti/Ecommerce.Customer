@@ -86,6 +86,14 @@
           }
         }
       },
+      "FluentValidation/11.11.0": {
+        "runtime": {
+          "lib/net6.0/FluentValidation.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.11.0.0"
+          }
+        }
+      },
       "MathNet.Numerics.Signed/4.15.0": {
         "runtime": {
           "lib/netstandard2.0/MathNet.Numerics.dll": {
@@ -837,6 +845,7 @@
       "Domain/1.0.0": {
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
+          "FluentValidation": "11.11.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.1",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.1",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
@@ -891,6 +900,13 @@
       "sha512": "sha512-d47SgeuGxKpalKhYoHqFkDPmO9SoE3amSwVNDoUdy4d675/tX7bLyZFHdjfo3Tobth9Y80VnjfasQ/PD4LqUuA==",
       "path": "enums.net/4.0.0",
       "hashPath": "enums.net.4.0.0.nupkg.sha512"
+    },
+    "FluentValidation/11.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cyIVdQBwSipxWG8MA3Rqox7iNbUNUTK5bfJi9tIdm4CAfH71Oo5ABLP4/QyrUwuakqpUEPGtE43BDddvEehuYw==",
+      "path": "fluentvalidation/11.11.0",
+      "hashPath": "fluentvalidation.11.11.0.nupkg.sha512"
     },
     "MathNet.Numerics.Signed/4.15.0": {
       "type": "package",
