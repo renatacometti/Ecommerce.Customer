@@ -1,24 +1,17 @@
-﻿using Domain.DTOs;
+﻿using Domain.DTOs.Permission;
 using Domain.DTOs.Profile;
 using Domain.DTOs.User;
 using Domain.Entities;
 using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Repository.Context;
-using System.Globalization;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
 
 namespace Repository.Repository
 {
-    public class UserRepository : BaseRepository<UserEntity>, IUserRepository
+    public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
     {
-        private IConfiguration _configuration;
-        public UserRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
+        public UserRepository(AppDbContext context) : base(context)
         {
-            _configuration = configuration;
         }
 
         public UserEntity ValidateUser(string email, string password)
@@ -34,7 +27,7 @@ namespace Repository.Repository
 
         public UserDTO SearchInfosToken(int userId)
         {
-
+            // innerJoin com Profile e Permission
             //var userDTO = (from user in _context.Users
             //               join p in _context.Profile on user.ProfileId equals p.Id
             //               join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId
@@ -60,6 +53,8 @@ namespace Repository.Repository
             //                                  }).ToList()
             //               }).FirstOrDefault();
 
+
+            //LeftJoin com Profile e Permission
             var userDTO = (from user in _context.Users
                            join p in _context.Profile on user.ProfileId equals p.Id
                            join pp1 in _context.ProfilePermission on p.Id equals pp1.ProfileId into profilePermissionGroup
@@ -84,7 +79,7 @@ namespace Repository.Repository
                                               select new PermissionDTO
                                               {
                                                   Id = perm != null ? perm.Id : 0,
-                                                  Name = perm != null ? perm.Name: "Usuario não possui Permissoes"
+                                                  Name = perm != null ? perm.Name : "Usuario não possui Permissoes"
                                               }).ToList()
                            }).FirstOrDefault();
 
@@ -136,129 +131,129 @@ namespace Repository.Repository
 
         }
 
-        public void SendEmail(UserEntity cliente)
-        {
-            using (SmtpClient client = new SmtpClient())
-            {
-                client.Host = _configuration["Email:Host"];
-                client.Port = int.Parse(_configuration["Email:Port"]);
-                client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(
-                    _configuration["Email:SenderEmail"],
-                    _configuration["Email:SenderPassword"]);
+        //public void SendEmail(UserEntity cliente)
+        //{
+        //    using (SmtpClient client = new SmtpClient())
+        //    {
+        //        client.Host = _configuration["Email:Host"];
+        //        client.Port = int.Parse(_configuration["Email:Port"]);
+        //        client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
+        //        client.UseDefaultCredentials = false;
+        //        client.Credentials = new NetworkCredential(
+        //            _configuration["Email:SenderEmail"],
+        //            _configuration["Email:SenderPassword"]);
 
-                MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
-                MailAddress para = new MailAddress(cliente.Email);
-                using (MailMessage email = new MailMessage(de, para))
-                {
-                    email.IsBodyHtml = true;
-                    email.Subject = "Seja bem vindo " + cliente.Name;
-                    email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+        //        MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
+        //        MailAddress para = new MailAddress(cliente.Email);
+        //        using (MailMessage email = new MailMessage(de, para))
+        //        {
+        //            email.IsBodyHtml = true;
+        //            email.Subject = "Seja bem vindo " + cliente.Name;
+        //            email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
 
 
-                    var caminho = Path.Combine(Environment.CurrentDirectory, _configuration["TemplatePath"], "EmailBoasVindas.cshtml");
+        //            var caminho = Path.Combine(Environment.CurrentDirectory, _configuration["TemplatePath"], "EmailBoasVindas.cshtml");
                    
 
-                    using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
-                    {
-                        string strMail = objReader.ReadToEnd();
-                        strMail = strMail.Replace("[Nome]", cliente.Name)
-                                         .Replace("[Email]", cliente.Email)
-                                         .Replace("[Senha]", cliente.Password);
+        //            using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+        //            {
+        //                string strMail = objReader.ReadToEnd();
+        //                strMail = strMail.Replace("[Nome]", cliente.Name)
+        //                                 .Replace("[Email]", cliente.Email)
+        //                                 .Replace("[Senha]", cliente.Password);
 
-                        email.Body = strMail;
-                    }
+        //                email.Body = strMail;
+        //            }
 
-                    try
-                    {
-                        client.Send(email);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"Erro ao enviar e-mail: {ex.Message}. Host: {client.Host}, Porta: {client.Port}, E-mail: {_configuration["Email:SenderEmail"]}");
-                    }
-                }
-            }
+        //            try
+        //            {
+        //                client.Send(email);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                throw new Exception($"Erro ao enviar e-mail: {ex.Message}. Host: {client.Host}, Porta: {client.Port}, E-mail: {_configuration["Email:SenderEmail"]}");
+        //            }
+        //        }
+        //    }
 
-            //CultureInfo cult = new CultureInfo("pt-BR");
+        //    //CultureInfo cult = new CultureInfo("pt-BR");
 
-            //SmtpClient client = new SmtpClient();
-            //client.Host = _configuration["Email:Host"];
-            //client.Port = int.Parse(_configuration["Email:Port"]);
-            //client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
-            //client.UseDefaultCredentials = false;
-            //client.Credentials = new NetworkCredential(_configuration["Email:SenderEmail"], _configuration["Email:SenderPassword"]);
-
-
-            //MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
-            //string emailpara = cliente.Email;
-            //MailAddress para = new MailAddress(emailpara); //email que peguei no site email 10 mint
-            //MailMessage email = new MailMessage(de, para);
-
-            //email.IsBodyHtml = true;
-            //email.Subject = "Seja bem vindo " + cliente.Name; // titulo do email
-
-            //var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
-            //using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
-            //{
-            //    var strMail = objReader.ReadToEnd();
+        //    //SmtpClient client = new SmtpClient();
+        //    //client.Host = _configuration["Email:Host"];
+        //    //client.Port = int.Parse(_configuration["Email:Port"]);
+        //    //client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
+        //    //client.UseDefaultCredentials = false;
+        //    //client.Credentials = new NetworkCredential(_configuration["Email:SenderEmail"], _configuration["Email:SenderPassword"]);
 
 
-            //    strMail = strMail.Replace("[Nome]", cliente.Name);
-            //    strMail = strMail.Replace("[Email]", cliente.Email);
-            //    strMail = strMail.Replace("[Senha]", cliente.Password);
+        //    //MailAddress de = new MailAddress(_configuration["Email:SenderEmail"]);
+        //    //string emailpara = cliente.Email;
+        //    //MailAddress para = new MailAddress(emailpara); //email que peguei no site email 10 mint
+        //    //MailMessage email = new MailMessage(de, para);
 
-            //    email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-            //    email.Body = strMail;
+        //    //email.IsBodyHtml = true;
+        //    //email.Subject = "Seja bem vindo " + cliente.Name; // titulo do email
 
-            //}
-            //try
-            //{
-            //    client.Send(email);
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception(ex.Message + client.Port + client.Host + _configuration["Email:SenderEmail"] + _configuration["Email:SenderPassword"]);
-            //}
-
-            //CultureInfo cult = new CultureInfo("pt-BR");
-            //MailMessage mailMessage = new MailMessage();
-            //var smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            //smtpClient.EnableSsl = true;
-            //smtpClient.UseDefaultCredentials = false;
-            //smtpClient.Credentials = new NetworkCredential("luanaanalist@gmail.com", "ewxjoizhprqzwuof");
-
-            //mailMessage.From = new MailAddress("renatacometti2@gmail.com", "Olá, Seja bem vindo ao nosso Ecommerce");
-            //mailMessage.IsBodyHtml = true;
-
-            //var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
-            //using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
-            //{
-            //    var strMail = objReader.ReadToEnd();
+        //    //var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
+        //    //using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+        //    //{
+        //    //    var strMail = objReader.ReadToEnd();
 
 
-            //    strMail = strMail.Replace("[Nome]", cliente.Nome);
-            //    strMail = strMail.Replace("[Email]", cliente.Email);
-            //    strMail = strMail.Replace("[Senha]", cliente.Senha);
+        //    //    strMail = strMail.Replace("[Nome]", cliente.Name);
+        //    //    strMail = strMail.Replace("[Email]", cliente.Email);
+        //    //    strMail = strMail.Replace("[Senha]", cliente.Password);
 
-            //    mailMessage.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-            //    mailMessage.Body = strMail;
-            //}
+        //    //    email.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+        //    //    email.Body = strMail;
 
-            //mailMessage.Subject = "Seja bem vindo " + cliente.Nome; // titulo do email
-            //mailMessage.To.Add(cliente.Email); // email de envio
+        //    //}
+        //    //try
+        //    //{
+        //    //    client.Send(email);
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    throw new Exception(ex.Message + client.Port + client.Host + _configuration["Email:SenderEmail"] + _configuration["Email:SenderPassword"]);
+        //    //}
 
-            //try
-            //{
-            //    smtpClient.Send(mailMessage);
-            //}
-            //catch (Exception ex)
-            //{
+        //    //CultureInfo cult = new CultureInfo("pt-BR");
+        //    //MailMessage mailMessage = new MailMessage();
+        //    //var smtpClient = new SmtpClient("smtp.gmail.com", 587);
+        //    //smtpClient.EnableSsl = true;
+        //    //smtpClient.UseDefaultCredentials = false;
+        //    //smtpClient.Credentials = new NetworkCredential("luanaanalist@gmail.com", "ewxjoizhprqzwuof");
 
-            //    throw new Exception(ex.Message);
-            //}
-        }
+        //    //mailMessage.From = new MailAddress("renatacometti2@gmail.com", "Olá, Seja bem vindo ao nosso Ecommerce");
+        //    //mailMessage.IsBodyHtml = true;
+
+        //    //var caminho = Environment.CurrentDirectory.ToString() + _configuration.GetValue<string>("TemplatePath") + "EmailBoasVindas.cshtml";
+        //    //using (StreamReader objReader = new StreamReader(caminho, Encoding.GetEncoding("iso-8859-1")))
+        //    //{
+        //    //    var strMail = objReader.ReadToEnd();
+
+
+        //    //    strMail = strMail.Replace("[Nome]", cliente.Nome);
+        //    //    strMail = strMail.Replace("[Email]", cliente.Email);
+        //    //    strMail = strMail.Replace("[Senha]", cliente.Senha);
+
+        //    //    mailMessage.BodyEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
+        //    //    mailMessage.Body = strMail;
+        //    //}
+
+        //    //mailMessage.Subject = "Seja bem vindo " + cliente.Nome; // titulo do email
+        //    //mailMessage.To.Add(cliente.Email); // email de envio
+
+        //    //try
+        //    //{
+        //    //    smtpClient.Send(mailMessage);
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+
+        //    //    throw new Exception(ex.Message);
+        //    //}
+        //}
 
         public UserEntity SearchUserAndTheirRelationships(int idCliente)
         {
@@ -324,6 +319,12 @@ namespace Repository.Repository
         {
             return await _context.SaveChangesAsync() > 0;
 
+        }
+
+
+        public void SendEmail(UserEntity user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

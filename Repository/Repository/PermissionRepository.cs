@@ -1,16 +1,15 @@
 ﻿using Domain.Entities;
 using Domain.Repository;
-using Microsoft.Extensions.Configuration;
 using Repository.Context;
 
 namespace Repository.Repository
 {
-    public class PermissionRepository : BaseRepository<PermissionEntity>, IPermissionRepository
+    public class PermissionRepository : RepositoryBase<PermissionEntity>, IPermissionRepository
     {
-        private IConfiguration _configuration;
-        public PermissionRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
+        
+        public PermissionRepository(AppDbContext appDbContext) : base(appDbContext)
         {
-            _configuration = configuration;
+            
         }
     }
 }

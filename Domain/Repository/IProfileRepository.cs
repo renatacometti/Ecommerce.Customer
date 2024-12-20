@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 namespace Domain.Repository
 {
-    public interface IProfileRepository : ICommonRepository<ProfileEntity>
+    public interface IProfileRepository : IRepositoryBase<ProfileEntity>
     {
     }
 }

@@ -7,7 +7,7 @@ using Service.Interfaces;
 namespace Ecommerce.Customer.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
 
         private readonly ITokenService _tokenService;

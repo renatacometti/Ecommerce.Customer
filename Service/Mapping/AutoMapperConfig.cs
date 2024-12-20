@@ -1,5 +1,5 @@
-﻿using Domain.DTOs;
-using Domain.DTOs.Address;
+﻿using Domain.DTOs.Address;
+using Domain.DTOs.Permission;
 using Domain.DTOs.Profile;
 using Domain.DTOs.User;
 using Domain.Entities;
@@ -20,6 +20,7 @@ namespace Service.Mapping
             CreateMap<AddressDTO, AddressEntity>().ReverseMap();
             CreateMap<ProfileDTO, ProfileEntity>().ReverseMap();
             CreateMap<PermissionDTO, PermissionEntity>().ReverseMap();
+            CreateMap<ProfilePermissionDTO, ProfilePermissionEntity>().ReverseMap();
             CreateMap<AddressVM, AddressEntity>().ReverseMap();
             CreateMap<CreateUserDTO, UserEntity>().ReverseMap();
 

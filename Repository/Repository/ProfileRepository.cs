@@ -1,16 +1,13 @@
 ﻿using Domain.Entities;
 using Domain.Repository;
-using Microsoft.Extensions.Configuration;
 using Repository.Context;
 
 namespace Repository.Repository
 {
-    public class ProfileRepository : BaseRepository<ProfileEntity>, IProfileRepository
+    public class ProfileRepository : RepositoryBase<ProfileEntity>, IProfileRepository
     {
-        private IConfiguration _configuration;
-        public ProfileRepository(AppDbContext appDbContext, IConfiguration configuration) : base(appDbContext)
+        public ProfileRepository(AppDbContext context) : base(context)
         {
-            _configuration = configuration;
         }
     }
 }

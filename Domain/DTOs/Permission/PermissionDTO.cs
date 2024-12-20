@@ -1,4 +1,5 @@
-﻿namespace Domain.DTOs
+﻿
+namespace Domain.DTOs.Permission
 {
     public class PermissionDTO
     {

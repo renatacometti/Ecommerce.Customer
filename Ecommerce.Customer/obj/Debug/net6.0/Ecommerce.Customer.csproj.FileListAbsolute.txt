@@ -122,6 +122,7 @@ C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\Azure.Core.dll
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\Azure.Identity.dll
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\Enums.NET.dll
+C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\FluentValidation.dll
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\MathNet.Numerics.dll
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
@@ -213,5 +214,3 @@ C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.pdb
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.genruntimeconfig.cache
 C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\ref\Ecommerce.Customer.dll
-C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\obj\Debug\net6.0\Ecommerce.Customer.MvcApplicationPartsAssemblyInfo.cs
-C:\Projetos\luanaanalist\customer-api\Ecommerce.Customer\Ecommerce.Customer\bin\Debug\net6.0\FluentValidation.dll

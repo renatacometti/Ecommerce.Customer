@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.Address;
+using Domain.DTOs.Permission;
 using Domain.DTOs.Profile;
 
 namespace Domain.DTOs.User

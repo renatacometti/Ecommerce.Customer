@@ -1,14 +1,24 @@
 ﻿using Domain.Common;
+using Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 using Repository.Context;
-
+using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Repository.Repository
 {
-    public abstract class BaseRepository<T> : TransactionRepository where T : BaseEntity
+    public class RepositoryBase<T> : IRepositoryBase<T>
+             where T : BaseEntity
     {
-        protected BaseRepository(AppDbContext appDbContext) : base(appDbContext)
+
+        protected readonly AppDbContext _context;
+
+        public RepositoryBase(AppDbContext context)
         {
+            _context = context;
+            _context.Database.SetCommandTimeout(180);
         }
+
         public virtual async Task<T> Create(T value)
         {
             T? response = default(T);
@@ -29,7 +39,6 @@ namespace Repository.Repository
 
             return response;
         }
-
 
 
         public virtual async Task<IList<T>> CreateBatch(IList<T> value)
@@ -68,7 +77,7 @@ namespace Repository.Repository
 
             if (value != null)
             {
-               
+
                 var responseUpdate = _context.Set<T>().Update(value);
 
                 await _context.SaveChangesAsync();
@@ -79,7 +88,7 @@ namespace Repository.Repository
             return response;
         }
 
-        // teste de um UPdate 2 que inclui
+        
         public virtual async Task Update2(T value)
         {
             T? response = default(T);
@@ -127,8 +136,6 @@ namespace Repository.Repository
 
         public IList<T> GetByFunc(Func<T, bool> filter)
         {
-
-
             return _context.Set<T>().Where(filter).ToList();
         }
 
@@ -137,6 +144,79 @@ namespace Repository.Repository
             return _context.Set<T>().Count(account => account.Id == id);
         }
 
+        public IQueryable<TResult> GetCombo<TResult>(Expression<Func<T, TResult>> projection)
+        {
+            var query = _context.Set<T>().AsQueryable();
+            return query.Select(projection);
+        }
 
+        public IQueryable<T> Get(Expression<Func<T, bool>> where)
+        {
+            var query = _context.Set<T>().Where(where).AsQueryable();
+            return query;
+        }
+
+        public IQueryable<T> GetAsNoTracking(Expression<Func<T, bool>> where)
+        {
+            var query = _context.Set<T>().Where(where).AsNoTracking().AsQueryable();
+            return query;
+        }
+
+        public ICollection<T> Get(Expression<Func<T, bool>> where, string field, int skip, int take)
+        {
+            var sort = GetOrderByExpression(field);
+
+            var entities = _context.Set<T>().Where(where).OrderBy(sort).Skip(skip).Take(take).ToList();
+
+            return entities;
+        }
+
+        public void Delete(Expression<Func<T, bool>> where)
+        {
+            var entities = _context.Set<T>().Where(where);
+            if (entities.Any())
+            {
+                _context.Set<T>().RemoveRange(entities);
+            }
+        }
+
+ 
+
+
+        public void Add(ICollection<T> commands)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(T command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Func<T, object> GetOrderByExpression(string sortColumn)
+        {
+            Func<T, object> orderByExpr = null;
+            if (!string.IsNullOrEmpty(sortColumn))
+            {
+                Type sponsorResultType = typeof(T);
+
+                if (sponsorResultType.GetProperties().Any(prop => prop.Name == sortColumn))
+                {
+                    System.Reflection.PropertyInfo pinfo = sponsorResultType.GetProperty(sortColumn);
+                    orderByExpr = data => pinfo.GetValue(data, null);
+                }
+            }
+            return orderByExpr;
+        }
+
+        public Task AddAsync(ICollection<T> commands)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddAsync(T command)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

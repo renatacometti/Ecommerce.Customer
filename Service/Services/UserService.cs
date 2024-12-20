@@ -6,7 +6,6 @@ using Service.ViewModel;
 using System.Text.RegularExpressions;
 using System.Linq.Dynamic.Core;
 using Domain.DTOs.User;
-using Repository.Repository;
 
 namespace Service.Services
 {
@@ -105,7 +104,7 @@ namespace Service.Services
             }
             catch (Exception ex)
             {
-                _userRepository.RollbackTransaction();
+                
                 throw new Exception(ex.Message);
             }
 
@@ -135,7 +134,7 @@ namespace Service.Services
                     return false;
 
 
-                _userRepository.BeginTransaction();
+                //_userRepository.BeginTransaction();
                 var createduser = new UserEntity();
                 createduser.Password = password;
                 createduser.Email = user.Email;
@@ -146,23 +145,23 @@ namespace Service.Services
                 createduser.Active = user.Active;
                 createduser.Phone = user.Phone;
 
-                var createdUser = await _userRepository.Create(createduser);
-                if (createdUser != null) 
-                {
-                    foreach (var address in userEntity.Addresses)
-                    {
-                        address.UserId = createdUser.Id;
-                        var createdAddress = await _addressRepository.Create(address);
-                    }
-                }
+                //var createdUser = await _userRepository.Create(createduser);
+                //if (createdUser != null) 
+                //{
+                //    foreach (var address in userEntity.Addresses)
+                //    {
+                //        address.UserId = createdUser.Id;
+                //        var createdAddress = await _addressRepository.Create(address);
+                //    }
+                //}
                
-                this._userRepository.CommitTransaction();
+                //this._userRepository.CommitTransaction();
                 //_userRepository.SendEmail(userEntity);
             }
             catch (Exception ex)
             {
                 
-                _userRepository.RollbackTransaction();
+                //_userRepository.RollbackTransaction();
                 throw new Exception(ex.Message);
             }
             return true;

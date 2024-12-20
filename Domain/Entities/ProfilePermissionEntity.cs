@@ -1,10 +1,10 @@
 ﻿
+using Domain.Common;
+
 namespace Domain.Entities
 {
-    public class ProfilePermissionEntity
+    public class ProfilePermissionEntity : BaseEntity
     {
-        public int Id {  get; set; }
-
         public int ProfileId { get; set; }
         public virtual ProfileEntity Profiles { get; set; }
 

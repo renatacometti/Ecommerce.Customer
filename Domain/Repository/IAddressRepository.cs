@@ -1,9 +1,9 @@
 ﻿using Domain.Entities;
 namespace Domain.Repository
 {
-    public interface IAddressRepository: ICommonRepository<AddressEntity>
+    public interface IAddressRepository: IRepositoryBase<AddressEntity>
     {
-        void Add(AddressEntity address);
+        Task Add(AddressEntity address);
         Task<bool> SaveAllAsync();
     }
 }

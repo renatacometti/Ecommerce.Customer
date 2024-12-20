@@ -12,9 +12,6 @@ namespace Infraestrutura
         public static void ConfigureApp(IServiceCollection services, Microsoft.Extensions.Configuration.IConfigurationRoot configuration)
         {
             ConfigureRepository(services);
-
-
-
             ConfigureService(services);
 
         }
@@ -25,6 +22,9 @@ namespace Infraestrutura
             services.AddScoped<IPermissionRepository, PermissionRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProfilePermissionRepository, ProfilePermissionRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
         }
         private static void ConfigureService(IServiceCollection services)
@@ -32,6 +32,7 @@ namespace Infraestrutura
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAddressService, EnderecoService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IProfileService, ProfileService>();
         }
 
     }

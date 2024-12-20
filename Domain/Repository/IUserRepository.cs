@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public interface IUserRepository: ICommonRepository<UserEntity>
+    public interface IUserRepository: IRepositoryBase<UserEntity>
     {
         UserEntity ValidateUser(string passaword, string password);
         bool UserExist(string cpf, string email);
