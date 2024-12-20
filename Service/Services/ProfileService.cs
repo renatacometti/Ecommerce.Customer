@@ -6,6 +6,7 @@ using FluentValidation.Results;
 using Repository.Repository;
 using Service.Interfaces;
 using Service.Services.Validator;
+using Service.ViewModel;
 
 namespace Service.Services
 {
@@ -13,17 +14,17 @@ namespace Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+ 
 
         public ProfileService( IMapper mapper, IUnitOfWork unitOfWork)
         {
-           _mapper = mapper;
-           _unitOfWork = unitOfWork;
-           
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<(ValidationResult validation, int? idNovo)> Add(ProfileDTO profile)
         {
-            //throw new NotImplementedException();
+            
             var profileEntity = _mapper.Map<ProfileEntity>(profile);
             var validation = new ProfileValidator().Validate(profileEntity);
             if (!validation.IsValid)
@@ -60,30 +61,6 @@ namespace Service.Services
                     await transaction.CommitAsync();
                     return (validation, createdProfile.Id);
 
-
-                    //foreach (var profilePermissionDto in profile.ProfilePermissions)
-                    //{
-                    //    var permissionEntity = new PermissionEntity
-                    //    {
-                    //        Name = profilePermissionDto.Permissions.Name,
-                    //        Description = profilePermissionDto.Permissions.Description,
-                    //        Active = profilePermissionDto.Permissions.Active
-                    //    };
-                    //    var createdPermission = await _unitOfWork.PermissionRepository.Create(permissionEntity);
-
-                    //    var profilePermissionEntity = new ProfilePermissionEntity
-                    //    {
-                    //        ProfileId = createdProfile.Id,
-                    //        PermissionId = profilePermissionDto.PermissionId,
-                    //        CreateDate = DateTime.Now
-                    //    };
-
-                    //    await _unitOfWork.ProfilePermissionRepository.Create(profilePermissionEntity);
-
-                    //}
-                    //await transaction.CommitAsync();
-                    //return (validation, createdProfile.Id);
-
                 }
                 catch (Exception ex)
                 {
@@ -94,6 +71,15 @@ namespace Service.Services
             }
 
             return (validation, profileEntity.Id);
+        }
+
+
+    
+
+        public  async Task<ProfileGetByIdDTO> GetById(int id)
+        {
+            var profile = await _unitOfWork.ProfileRepository.ProfileGetById(id);
+            return profile;
         }
     }
 }

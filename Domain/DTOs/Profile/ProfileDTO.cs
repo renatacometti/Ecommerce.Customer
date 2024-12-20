@@ -12,8 +12,6 @@ namespace Domain.DTOs.Profile
         //public ICollection<ProfilePermissionDTO> ProfilePermissions { get; set; }
         public ICollection<PermissionDTO> Permissions { get; set; }
 
-
-
     }
 
     public class ProfilePermissionDTO 

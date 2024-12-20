@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Service.ViewModel;
 
 namespace Ecommerce.Customer.Controllers
 {
@@ -32,5 +33,25 @@ namespace Ecommerce.Customer.Controllers
                 return new ActionItemResponse<int?>(ex);
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionItemResponse<ProfileGetByIdDTO>> GetById([FromRoute] int id)
+        {
+            ActionItemResponse<ProfileGetByIdDTO> actionResponse;
+
+            try
+            {
+                var profile = await _profileService.GetById(id);
+
+                actionResponse = new ActionItemResponse<ProfileGetByIdDTO>(profile);
+            }
+            catch (Exception ex)
+            {
+                actionResponse = new ActionItemResponse<ProfileGetByIdDTO>(ex);
+            }
+
+            return actionResponse;
+        }
+
     }
 }

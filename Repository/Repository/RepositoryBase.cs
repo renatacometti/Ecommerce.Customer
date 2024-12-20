@@ -3,7 +3,6 @@ using Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Repository.Repository
 {
